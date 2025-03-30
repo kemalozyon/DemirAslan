@@ -1,0 +1,62 @@
+{
+  "name": "demiraslan",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder build --win --publish never",
+    "build:portable": "electron-builder build --win portable --publish never",
+    "build:mac": "electron-builder build --mac --publish never",
+    "build:all": "electron-builder build -mw --publish never",
+    "pack-win": "electron-builder --win --dir"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Simple Electron desktop application",
+  "devDependencies": {
+    "electron": "^35.1.2",
+    "electron-builder": "^24.13.3",
+    "jimp": "^0.22.10",
+    "to-ico": "^1.1.5"
+  },
+  "build": {
+    "appId": "com.demiraslan.app",
+    "productName": "Demir Aslan",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "runAfterFinish": true
+    },
+    "portable": {
+      "artifactName": "${productName}-Portable-${version}.${ext}"
+    }
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1"
+  }
+}
