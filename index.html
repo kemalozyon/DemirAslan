@@ -472,22 +472,6 @@
     <form id="priceForm" class="price-form">
       <div class="price-item">
         <div class="price-header">
-          <span class="product-name">24 Ayar</span>
-        </div>
-        <div class="price-inputs">
-          <div class="input-group">
-            <label for="24ayarAlis">Alış Fiyatı (₺)</label>
-            <input type="number" id="24ayarAlis" step="0.01" required>
-          </div>
-          <div class="input-group">
-            <label for="24ayarSatis">Satış Fiyatı (₺)</label>
-            <input type="number" id="24ayarSatis" step="0.01" required>
-          </div>
-        </div>
-      </div>
-
-      <div class="price-item">
-        <div class="price-header">
           <span class="product-name">22 Ayar</span>
         </div>
         <div class="price-inputs">
@@ -504,7 +488,7 @@
 
       <div class="price-item">
         <div class="price-header">
-          <span class="product-name">Çeyrek</span>
+          <span class="product-name">Yeni Çeyrek</span>
         </div>
         <div class="price-inputs">
           <div class="input-group">
@@ -520,7 +504,7 @@
 
       <div class="price-item">
         <div class="price-header">
-          <span class="product-name">B.Çeyrek</span>
+          <span class="product-name">Eski Çeyrek</span>
         </div>
         <div class="price-inputs">
           <div class="input-group">
@@ -536,7 +520,7 @@
 
       <div class="price-item">
         <div class="price-header">
-          <span class="product-name">Yarımlık</span>
+          <span class="product-name">Yeni Yarım</span>
         </div>
         <div class="price-inputs">
           <div class="input-group">
@@ -552,7 +536,7 @@
 
       <div class="price-item">
         <div class="price-header">
-          <span class="product-name">Tümlük</span>
+          <span class="product-name">Eski Yarım</span>
         </div>
         <div class="price-inputs">
           <div class="input-group">
@@ -562,6 +546,86 @@
           <div class="input-group">
             <label for="tamSatis">Satış Fiyatı (₺)</label>
             <input type="number" id="tamSatis" step="0.01" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-item">
+        <div class="price-header">
+          <span class="product-name">Yeni Tek Ata</span>
+        </div>
+        <div class="price-inputs">
+          <div class="input-group">
+            <label for="24ayarAlis">Alış Fiyatı (₺)</label>
+            <input type="number" id="24ayarAlis" step="0.01" required>
+          </div>
+          <div class="input-group">
+            <label for="24ayarSatis">Satış Fiyatı (₺)</label>
+            <input type="number" id="24ayarSatis" step="0.01" required>
+          </div>
+        </div>
+      </div>
+      
+      <div class="price-item">
+        <div class="price-header">
+          <span class="product-name">Eski Tek Ata</span>
+        </div>
+        <div class="price-inputs">
+          <div class="input-group">
+            <label for="eskiTekAtaAlis">Alış Fiyatı (₺)</label>
+            <input type="number" id="eskiTekAtaAlis" step="0.01" required>
+          </div>
+          <div class="input-group">
+            <label for="eskiTekAtaSatis">Satış Fiyatı (₺)</label>
+            <input type="number" id="eskiTekAtaSatis" step="0.01" required>
+          </div>
+        </div>
+      </div>
+      
+      <div class="price-item">
+        <div class="price-header">
+          <span class="product-name">Yeni Kremsiye</span>
+        </div>
+        <div class="price-inputs">
+          <div class="input-group">
+            <label for="yeniKremsiyeAlis">Alış Fiyatı (₺)</label>
+            <input type="number" id="yeniKremsiyeAlis" step="0.01" required>
+          </div>
+          <div class="input-group">
+            <label for="yeniKremsiyeSatis">Satış Fiyatı (₺)</label>
+            <input type="number" id="yeniKremsiyeSatis" step="0.01" required>
+          </div>
+        </div>
+      </div>
+      
+      <div class="price-item">
+        <div class="price-header">
+          <span class="product-name">Eski Kremsiye</span>
+        </div>
+        <div class="price-inputs">
+          <div class="input-group">
+            <label for="eskiKremsiyeAlis">Alış Fiyatı (₺)</label>
+            <input type="number" id="eskiKremsiyeAlis" step="0.01" required>
+          </div>
+          <div class="input-group">
+            <label for="eskiKremsiyeSatis">Satış Fiyatı (₺)</label>
+            <input type="number" id="eskiKremsiyeSatis" step="0.01" required>
+          </div>
+        </div>
+      </div>
+      
+      <div class="price-item">
+        <div class="price-header">
+          <span class="product-name">Gram Altın</span>
+        </div>
+        <div class="price-inputs">
+          <div class="input-group">
+            <label for="gramAltinAlis">Alış Fiyatı (₺)</label>
+            <input type="number" id="gramAltinAlis" step="0.01" required>
+          </div>
+          <div class="input-group">
+            <label for="gramAltinSatis">Satış Fiyatı (₺)</label>
+            <input type="number" id="gramAltinSatis" step="0.01" required>
           </div>
         </div>
       </div>
@@ -630,11 +694,6 @@
       
       const prices = [
         {
-          name: '24 Ayar',
-          buyPrice: parseFloat(document.getElementById('24ayarAlis').value),
-          sellPrice: parseFloat(document.getElementById('24ayarSatis').value)
-        },
-        {
           name: '22 Ayar',
           buyPrice: parseFloat(document.getElementById('22ayarAlis').value),
           sellPrice: parseFloat(document.getElementById('22ayarSatis').value)
@@ -658,6 +717,31 @@
           name: 'Tam',
           buyPrice: parseFloat(document.getElementById('tamAlis').value),
           sellPrice: parseFloat(document.getElementById('tamSatis').value)
+        },
+        {
+          name: '24 Ayar',
+          buyPrice: parseFloat(document.getElementById('24ayarAlis').value),
+          sellPrice: parseFloat(document.getElementById('24ayarSatis').value)
+        },
+        {
+          name: 'ESKI TEK ATA',
+          buyPrice: parseFloat(document.getElementById('eskiTekAtaAlis').value),
+          sellPrice: parseFloat(document.getElementById('eskiTekAtaSatis').value)
+        },
+        {
+          name: 'YENI KREMSIYE',
+          buyPrice: parseFloat(document.getElementById('yeniKremsiyeAlis').value),
+          sellPrice: parseFloat(document.getElementById('yeniKremsiyeSatis').value)
+        },
+        {
+          name: 'ESKI KREMSIYE',
+          buyPrice: parseFloat(document.getElementById('eskiKremsiyeAlis').value),
+          sellPrice: parseFloat(document.getElementById('eskiKremsiyeSatis').value)
+        },
+        {
+          name: 'GRAM ALTIN',
+          buyPrice: parseFloat(document.getElementById('gramAltinAlis').value),
+          sellPrice: parseFloat(document.getElementById('gramAltinSatis').value)
         }
       ];
 
