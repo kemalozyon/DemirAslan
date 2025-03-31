@@ -2,21 +2,713 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Demir Aslan</title>
-  <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-  <link rel="stylesheet" href="styles.css">
+  <title>Demir Aslan - Kuyumcu Fiyat Yönetimi</title>
+  <style>
+    :root {
+      --bg-color: #1a1a1a;
+      --text-color: #fff;
+      --input-bg: #333;
+      --border-color: rgba(255, 215, 0, 0.3);
+      --header-color: #ffd700;
+    }
+
+    [data-theme="light"] {
+      --bg-color: #f5f5f5;
+      --text-color: #333;
+      --input-bg: #fff;
+      --border-color: #ddd;
+      --header-color: #b71c1c;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    h1 {
+      color: var(--header-color);
+      font-size: 28px;
+      margin: 0;
+    }
+
+    .theme-toggle, .display-theme-toggle, .display-toggle {
+      background: none;
+      border: 2px solid var(--border-color);
+      color: var(--text-color);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+
+    .theme-toggle:hover, .display-theme-toggle:hover, .display-toggle:hover {
+      background: var(--header-color);
+      color: var(--bg-color);
+    }
+
+    .price-form {
+      display: grid;
+      gap: 20px;
+    }
+
+    .price-item {
+      background: var(--input-bg);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+
+    .price-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .product-name {
+      font-size: 20px;
+      color: var(--header-color);
+      font-weight: bold;
+    }
+
+    .price-inputs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 5px;
+      color: var(--text-color);
+      font-size: 14px;
+    }
+
+    input {
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      background: var(--input-bg);
+      color: var(--text-color);
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    /* Remove increase/decrease buttons from number inputs */
+    input[type="number"] {
+      -webkit-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button, 
+    input[type="number"]::-webkit-outer-spin-button { 
+      -webkit-appearance: none;
+      margin: 0; 
+    }
+
+    input:focus {
+      border-color: var(--header-color);
+    }
+
+    button[type="submit"] {
+      background: var(--header-color);
+      color: var(--bg-color);
+      border: none;
+      padding: 15px 30px;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    button[type="submit"]:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .status {
+      text-align: center;
+      margin-top: 20px;
+      padding: 10px;
+      border-radius: 5px;
+      font-size: 16px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .status.success {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: #2ecc71;
+      border: 1px solid #2ecc71;
+      opacity: 1;
+    }
+
+    .status.error {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: #e74c3c;
+      border: 1px solid #e74c3c;
+      opacity: 1;
+    }
+
+    /* Customization Modal Styles */
+    .customize-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      overflow: auto;
+    }
+    
+    .customize-modal-content {
+      background-color: var(--bg-color);
+      margin: 10% auto;
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      border-radius: 15px;
+      width: 80%;
+      max-width: 500px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .customize-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+    
+    .customize-header h2 {
+      margin: 0;
+      color: var(--header-color);
+      font-size: 22px;
+    }
+    
+    .customize-close {
+      color: var(--text-color);
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .customize-body {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    .color-picker-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .color-picker-group label {
+      flex: 1;
+      margin-bottom: 0;
+    }
+    
+    input[type="color"] {
+      -webkit-appearance: none;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid var(--border-color);
+    }
+    
+    input[type="color"]::-webkit-color-swatch-wrapper {
+      padding: 0;
+      border-radius: 50%;
+    }
+    
+    input[type="color"]::-webkit-color-swatch {
+      border: none;
+      border-radius: 50%;
+    }
+    
+    .apply-colors {
+      background: var(--header-color);
+      color: var(--bg-color);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 10px;
+      width: 100%;
+    }
+    
+    .apply-colors:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .customize-toggle {
+      background: none;
+      border: 2px solid var(--border-color);
+      color: var(--text-color);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    
+    .customize-toggle:hover {
+      background: var(--header-color);
+      color: var(--bg-color);
+    }
+
+    .toggle-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 5px;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    
+    input:checked + .toggle-slider {
+      background-color: var(--header-color);
+    }
+    
+    input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+
+    /* Make toggle more clickable */
+    .toggle-group {
+      cursor: pointer;
+    }
+    
+    .toggle-group label {
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
-    <h1>Welcome to Demir Aslan</h1>
-    <p>This is a simple Electron desktop application.</p>
-    <button id="greet-btn">Click Me</button>
-    <p id="greeting"></p>
-    <div class="footer">
-      <small id="app-version">Version: 1.0.0</small>
+    <div class="header-container">
+      <h1>Demir Aslan Kuyumculuk Fiyat Yönetimi</h1>
+      <div class="header-buttons">
+        <button class="theme-toggle" onclick="toggleTheme()">Tema Değiştir</button>
+        <button class="display-theme-toggle" onclick="toggleDisplayTheme()">Ekran Teması</button>
+        <button class="display-toggle" onclick="toggleDisplay()">Ekranı Göster</button>
+        <button class="customize-toggle" onclick="toggleCustomizeModal()">Özelleştir</button>
+      </div>
     </div>
+    
+    <!-- Customization Modal -->
+    <div id="customizeModal" class="customize-modal">
+      <div class="customize-modal-content">
+        <div class="customize-header">
+          <h2>Ekran Renklerini Özelleştir</h2>
+          <span class="customize-close" onclick="toggleCustomizeModal()">&times;</span>
+        </div>
+        <div class="customize-body">
+          <div class="color-picker-group">
+            <label for="bgColorPicker">Arkaplan Rengi:</label>
+            <input type="color" id="bgColorPicker" value="#000000">
+          </div>
+          <div class="color-picker-group">
+            <label for="titleColorPicker">Başlık Rengi:</label>
+            <input type="color" id="titleColorPicker" value="#ffd700">
+          </div>
+          <div class="color-picker-group">
+            <label for="textColorPicker">Metin Rengi:</label>
+            <input type="color" id="textColorPicker" value="#ffffff">
+          </div>
+          <div class="color-picker-group">
+            <label for="shadowColorPicker">Gölge Rengi:</label>
+            <input type="color" id="shadowColorPicker" value="#ffd700">
+          </div>
+          <div class="toggle-group">
+            <label for="titleToggle">Başlığı Göster:</label>
+            <div class="toggle-switch">
+              <input type="checkbox" id="titleToggle" checked>
+              <span class="toggle-slider"></span>
+            </div>
+          </div>
+          <div class="color-picker-group">
+            <label for="boxColorPicker">Kutu Rengi:</label>
+            <input type="color" id="boxColorPicker" value="#333333">
+          </div>
+          <button class="apply-colors" onclick="applyCustomColors()">Renkleri Uygula</button>
+        </div>
+      </div>
+    </div>
+    
+    <form id="priceForm" class="price-form">
+      <div class="price-item">
+        <div class="price-header">
+          <span class="product-name">24 Ayar</span>
+        </div>
+        <div class="price-inputs">
+          <div class="input-group">
+            <label for="24ayarAlis">Alış Fiyatı (₺)</label>
+            <input type="number" id="24ayarAlis" step="0.01" required>
+          </div>
+          <div class="input-group">
+            <label for="24ayarSatis">Satış Fiyatı (₺)</label>
+            <input type="number" id="24ayarSatis" step="0.01" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-item">
+        <div class="price-header">
+          <span class="product-name">22 Ayar</span>
+        </div>
+        <div class="price-inputs">
+          <div class="input-group">
+            <label for="22ayarAlis">Alış Fiyatı (₺)</label>
+            <input type="number" id="22ayarAlis" step="0.01" required>
+          </div>
+          <div class="input-group">
+            <label for="22ayarSatis">Satış Fiyatı (₺)</label>
+            <input type="number" id="22ayarSatis" step="0.01" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-item">
+        <div class="price-header">
+          <span class="product-name">Çeyrek</span>
+        </div>
+        <div class="price-inputs">
+          <div class="input-group">
+            <label for="ceyrekAlis">Alış Fiyatı (₺)</label>
+            <input type="number" id="ceyrekAlis" step="0.01" required>
+          </div>
+          <div class="input-group">
+            <label for="ceyrekSatis">Satış Fiyatı (₺)</label>
+            <input type="number" id="ceyrekSatis" step="0.01" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-item">
+        <div class="price-header">
+          <span class="product-name">B.Çeyrek</span>
+        </div>
+        <div class="price-inputs">
+          <div class="input-group">
+            <label for="bceyrekAlis">Alış Fiyatı (₺)</label>
+            <input type="number" id="bceyrekAlis" step="0.01" required>
+          </div>
+          <div class="input-group">
+            <label for="bceyrekSatis">Satış Fiyatı (₺)</label>
+            <input type="number" id="bceyrekSatis" step="0.01" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-item">
+        <div class="price-header">
+          <span class="product-name">Yarımlık</span>
+        </div>
+        <div class="price-inputs">
+          <div class="input-group">
+            <label for="yarimAlis">Alış Fiyatı (₺)</label>
+            <input type="number" id="yarimAlis" step="0.01" required>
+          </div>
+          <div class="input-group">
+            <label for="yarimSatis">Satış Fiyatı (₺)</label>
+            <input type="number" id="yarimSatis" step="0.01" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-item">
+        <div class="price-header">
+          <span class="product-name">Tümlük</span>
+        </div>
+        <div class="price-inputs">
+          <div class="input-group">
+            <label for="tamAlis">Alış Fiyatı (₺)</label>
+            <input type="number" id="tamAlis" step="0.01" required>
+          </div>
+          <div class="input-group">
+            <label for="tamSatis">Satış Fiyatı (₺)</label>
+            <input type="number" id="tamSatis" step="0.01" required>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit">Fiyatları Güncelle</button>
+    </form>
+    <div id="status" class="status"></div>
   </div>
-  
-  <script src="renderer.js"></script>
+
+  <script>
+    // Track current display theme and visibility
+    let currentDisplayTheme = 'dark';
+    let isDisplayVisible = false;
+
+    // Theme toggle functionality
+    function toggleTheme() {
+      const body = document.body;
+      const currentTheme = body.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+      
+      if (currentTheme === 'light') {
+        body.removeAttribute('data-theme');
+      } else {
+        body.setAttribute('data-theme', 'light');
+      }
+
+      // Notify main process about theme change
+      window.electron.send('theme-change', newTheme);
+    }
+
+    // Display panel theme toggle functionality
+    function toggleDisplayTheme() {
+      currentDisplayTheme = currentDisplayTheme === 'light' ? 'dark' : 'light';
+      
+      // Notify main process about display theme change
+      window.electron.send('display-theme-change', currentDisplayTheme);
+      
+      // Update button text to indicate current state
+      const displayThemeButton = document.querySelector('.display-theme-toggle');
+      displayThemeButton.textContent = currentDisplayTheme === 'light' ? 'Ekran: Açık' : 'Ekran: Koyu';
+    }
+    
+    // Toggle display window visibility
+    function toggleDisplay() {
+      isDisplayVisible = !isDisplayVisible;
+      
+      // Notify main process about display visibility
+      window.electron.send('toggle-display', isDisplayVisible);
+      
+      // Update button text to indicate current state
+      const displayToggleButton = document.querySelector('.display-toggle');
+      displayToggleButton.textContent = isDisplayVisible ? 'Ekranı Gizle' : 'Ekranı Göster';
+    }
+
+    // Initialize display buttons text
+    document.addEventListener('DOMContentLoaded', function() {
+      const displayThemeButton = document.querySelector('.display-theme-toggle');
+      displayThemeButton.textContent = 'Ekran: Koyu';
+      
+      const displayToggleButton = document.querySelector('.display-toggle');
+      displayToggleButton.textContent = 'Ekranı Göster';
+    });
+
+    document.getElementById('priceForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const prices = [
+        {
+          name: '24 Ayar',
+          buyPrice: parseFloat(document.getElementById('24ayarAlis').value),
+          sellPrice: parseFloat(document.getElementById('24ayarSatis').value)
+        },
+        {
+          name: '22 Ayar',
+          buyPrice: parseFloat(document.getElementById('22ayarAlis').value),
+          sellPrice: parseFloat(document.getElementById('22ayarSatis').value)
+        },
+        {
+          name: 'Çeyrek',
+          buyPrice: parseFloat(document.getElementById('ceyrekAlis').value),
+          sellPrice: parseFloat(document.getElementById('ceyrekSatis').value)
+        },
+        {
+          name: 'B.Çeyrek',
+          buyPrice: parseFloat(document.getElementById('bceyrekAlis').value),
+          sellPrice: parseFloat(document.getElementById('bceyrekSatis').value)
+        },
+        {
+          name: 'Yarım',
+          buyPrice: parseFloat(document.getElementById('yarimAlis').value),
+          sellPrice: parseFloat(document.getElementById('yarimSatis').value)
+        },
+        {
+          name: 'Tam',
+          buyPrice: parseFloat(document.getElementById('tamAlis').value),
+          sellPrice: parseFloat(document.getElementById('tamSatis').value)
+        }
+      ];
+
+      // Send prices to main process
+      window.electron.send('update-prices', prices);
+
+      // Show success message
+      const status = document.getElementById('status');
+      status.textContent = 'Fiyatlar başarıyla güncellendi!';
+      status.className = 'status success';
+
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        status.className = 'status';
+      }, 3000);
+    });
+
+    // Update button text to indicate current state
+    function toggleCustomizeModal() {
+      const modal = document.getElementById('customizeModal');
+      if (modal.style.display === 'block') {
+        modal.style.display = 'none';
+      } else {
+        modal.style.display = 'block';
+        loadCurrentColors();
+      }
+    }
+    
+    // Add a click handler for the toggle group
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggleGroup = document.querySelector('.toggle-group');
+      const toggleInput = document.getElementById('titleToggle');
+      
+      toggleGroup.addEventListener('click', function(e) {
+        // Don't toggle if clicking the checkbox directly (it handles itself)
+        if (e.target !== toggleInput) {
+          toggleInput.checked = !toggleInput.checked;
+          console.log('Toggle switched to:', toggleInput.checked);
+        }
+      });
+    });
+    
+    // Load current colors to the color pickers
+    function loadCurrentColors() {
+      // Request current colors from main process
+      window.electron.send('get-display-colors');
+    }
+    
+    // Apply custom colors to the display panel
+    function applyCustomColors() {
+      const bgColor = document.getElementById('bgColorPicker').value;
+      const titleColor = document.getElementById('titleColorPicker').value;
+      const textColor = document.getElementById('textColorPicker').value;
+      const shadowColor = document.getElementById('shadowColorPicker').value;
+      const boxColor = document.getElementById('boxColorPicker').value;
+      const showTitle = document.getElementById('titleToggle').checked;
+      
+      const colorConfig = {
+        bgColor,
+        titleColor,
+        textColor,
+        shadowColor,
+        boxColor,
+        showTitle
+      };
+      
+      // Send color config to main process
+      window.electron.send('update-display-colors', colorConfig);
+      
+      // Show success message
+      const status = document.getElementById('status');
+      status.textContent = 'Görünüm başarıyla güncellendi';
+      status.className = 'status success';
+      
+      // Hide the modal
+      document.getElementById('customizeModal').style.display = 'none';
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        status.className = 'status';
+      }, 3000);
+    }
+    
+    // Handle receiving current colors from main process
+    window.electron.receive('current-display-colors', (colors) => {
+      document.getElementById('bgColorPicker').value = colors.bgColor || '#000000';
+      document.getElementById('titleColorPicker').value = colors.titleColor || '#ffd700';
+      document.getElementById('textColorPicker').value = colors.textColor || '#ffffff';
+      document.getElementById('shadowColorPicker').value = colors.shadowColor || '#ffd700';
+      document.getElementById('boxColorPicker').value = colors.boxColor || '#333333';
+      
+      // Set the title toggle status if it exists in the config
+      if (colors.hasOwnProperty('showTitle')) {
+        document.getElementById('titleToggle').checked = colors.showTitle;
+      }
+    });
+  </script>
 </body>
 </html> 
