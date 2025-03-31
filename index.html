@@ -370,6 +370,47 @@
     .toggle-group label {
       cursor: pointer;
     }
+
+    /* Reset buttons styling */
+    .reset-buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .reset-dark, .reset-light {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      flex: 1;
+    }
+    
+    .reset-dark {
+      background-color: #333;
+      color: #fff;
+      border: 1px solid #555;
+    }
+    
+    .reset-light {
+      background-color: #f5f5f5;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+    
+    .reset-dark:hover {
+      background-color: #444;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .reset-light:hover {
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
   </style>
 </head>
 <body>
@@ -418,6 +459,10 @@
           <div class="color-picker-group">
             <label for="boxColorPicker">Kutu Rengi:</label>
             <input type="color" id="boxColorPicker" value="#333333">
+          </div>
+          <div class="reset-buttons">
+            <button class="reset-dark" onclick="resetToDarkMode()">Koyu Temayı Sıfırla</button>
+            <button class="reset-light" onclick="resetToLightMode()">Açık Temayı Sıfırla</button>
           </div>
           <button class="apply-colors" onclick="applyCustomColors()">Renkleri Uygula</button>
         </div>
@@ -709,6 +754,78 @@
         document.getElementById('titleToggle').checked = colors.showTitle;
       }
     });
+
+    // Reset to dark mode
+    function resetToDarkMode() {
+      document.getElementById('bgColorPicker').value = '#000000';
+      document.getElementById('titleColorPicker').value = '#ffd700';
+      document.getElementById('textColorPicker').value = '#ffffff';
+      document.getElementById('shadowColorPicker').value = '#ffd700';
+      document.getElementById('boxColorPicker').value = '#333333';
+      document.getElementById('titleToggle').checked = true;
+      
+      // Apply the changes immediately
+      const colorConfig = {
+        bgColor: '#000000',
+        titleColor: '#ffd700',
+        textColor: '#ffffff',
+        shadowColor: '#ffd700',
+        boxColor: '#333333',
+        showTitle: true
+      };
+      
+      // Send color config to main process
+      window.electron.send('update-display-colors', colorConfig);
+      
+      // Show success message
+      const status = document.getElementById('status');
+      status.textContent = 'Koyu tema ayarları uygulandı';
+      status.className = 'status success';
+      
+      // Hide the modal
+      document.getElementById('customizeModal').style.display = 'none';
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        status.className = 'status';
+      }, 3000);
+    }
+
+    // Reset to light mode
+    function resetToLightMode() {
+      document.getElementById('bgColorPicker').value = '#ffffff';
+      document.getElementById('titleColorPicker').value = '#d4af37';
+      document.getElementById('textColorPicker').value = '#000000';
+      document.getElementById('shadowColorPicker').value = '#ffd700';
+      document.getElementById('boxColorPicker').value = '#f5f5f5';
+      document.getElementById('titleToggle').checked = true;
+      
+      // Apply the changes immediately
+      const colorConfig = {
+        bgColor: '#ffffff',
+        titleColor: '#d4af37',
+        textColor: '#000000',
+        shadowColor: '#ffd700',
+        boxColor: '#f5f5f5',
+        showTitle: true
+      };
+      
+      // Send color config to main process
+      window.electron.send('update-display-colors', colorConfig);
+      
+      // Show success message
+      const status = document.getElementById('status');
+      status.textContent = 'Açık tema ayarları uygulandı';
+      status.className = 'status success';
+      
+      // Hide the modal
+      document.getElementById('customizeModal').style.display = 'none';
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        status.className = 'status';
+      }, 3000);
+    }
   </script>
 </body>
 </html> 
