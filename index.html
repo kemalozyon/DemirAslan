@@ -613,22 +613,6 @@
           </div>
         </div>
       </div>
-      
-      <div class="price-item">
-        <div class="price-header">
-          <span class="product-name">Gram Altın</span>
-        </div>
-        <div class="price-inputs">
-          <div class="input-group">
-            <label for="gramAltinAlis">Alış Fiyatı (₺)</label>
-            <input type="number" id="gramAltinAlis" step="0.01" required>
-          </div>
-          <div class="input-group">
-            <label for="gramAltinSatis">Satış Fiyatı (₺)</label>
-            <input type="number" id="gramAltinSatis" step="0.01" required>
-          </div>
-        </div>
-      </div>
 
       <button type="submit">Fiyatları Güncelle</button>
     </form>
@@ -737,11 +721,6 @@
           name: 'ESKI KREMSIYE',
           buyPrice: parseFloat(document.getElementById('eskiKremsiyeAlis').value),
           sellPrice: parseFloat(document.getElementById('eskiKremsiyeSatis').value)
-        },
-        {
-          name: 'GRAM ALTIN',
-          buyPrice: parseFloat(document.getElementById('gramAltinAlis').value),
-          sellPrice: parseFloat(document.getElementById('gramAltinSatis').value)
         }
       ];
 

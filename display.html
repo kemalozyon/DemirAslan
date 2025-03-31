@@ -63,19 +63,19 @@
       display: flex;
       flex-direction: column;
       padding: 1vh 2vw;
-      padding-bottom: 5rem;
-      gap: 1vh;
+      padding-bottom: 3rem;
+      gap: 0.8vh;
     }
 
     .header {
-      font-size: min(4vw, 3rem);
+      font-size: min(3.8vw, 2.8rem);
       text-align: center;
       color: var(--header-color);
-      margin-bottom: min(2vh, 1.5rem);
+      margin-bottom: min(1.5vh, 1rem);
       font-weight: 700;
       letter-spacing: 1px;
       position: relative;
-      padding-bottom: min(1vh, 0.5rem);
+      padding-bottom: min(0.8vh, 0.4rem);
       text-transform: uppercase;
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
     }
@@ -116,12 +116,12 @@
       display: grid;
       grid-template-columns: 28% 35% 35%;
       gap: 1%;
-      margin-bottom: min(1.5vh, 0.8rem);
+      margin-bottom: min(1vh, 0.5rem);
     }
 
     .price-row {
       transition: all 0.3s ease;
-      height: min(12vh, 5rem);
+      height: min(10vh, 4.2rem);
     }
 
     .price-row:hover {
@@ -129,7 +129,7 @@
     }
 
     .product-name {
-      font-size: min(3vw, 1.8rem);
+      font-size: min(2.5vw, 1.6rem);
       color: var(--text-color);
       text-align: center;
       width: 100%;
@@ -144,7 +144,7 @@
       gap: 0.3rem;
       background: var(--box-color);
       border-radius: min(1.5vw, 12px);
-      padding: min(1.5vh, 1rem);
+      padding: min(1vh, 0.8rem);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 4px 24px var(--shadow-color), 0 0 15px var(--glow-color);
@@ -154,7 +154,7 @@
     }
 
     .product-emoji {
-      font-size: min(2.2vw, 1.6rem);
+      font-size: min(2vw, 1.4rem);
       color: var(--header-color);
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
       flex-shrink: 0;
@@ -167,7 +167,7 @@
       text-align: center;
       white-space: nowrap;
       overflow: visible;
-      font-size: min(2.8vw, 1.6rem);
+      font-size: min(2.4vw, 1.4rem);
       color: var(--text-color);
       display: flex;
       align-items: center;
@@ -197,10 +197,10 @@
 
     .price-cell {
       background: var(--box-color);
-      font-size: min(4vw, 2.5rem);
+      font-size: min(3.5vw, 2.2rem);
       font-weight: 600;
       text-align: center;
-      padding: min(2vh, 1.2rem) min(1.5vh, 1rem);
+      padding: min(1.5vh, 1rem) min(1.2vh, 0.8rem);
       border-radius: min(1.5vw, 12px);
       width: 100%;
       color: var(--text-color);
@@ -276,6 +276,11 @@
       color: var(--text-color);
     }
 
+    /* Additional spacing for last items */
+    .price-row:nth-last-child(-n+2) {
+      margin-bottom: min(2vh, 0.9rem);
+    }
+
     .header-row {
       margin-bottom: 15px;
     }
@@ -311,7 +316,7 @@
     /* Center market info at the bottom */
     .market-info {
       position: fixed;
-      bottom: 10px;
+      bottom: 5px;
       left: 0;
       right: 0;
       width: 100%;
@@ -320,12 +325,13 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      gap: 5px;
+      gap: 3px;
     }
     
     .time, .last-updated, .author {
       text-align: center;
       width: 100%;
+      font-size: min(2vw, 1rem);
     }
   </style>
 </head>
@@ -461,8 +467,7 @@
         { key: '24 Ayar', label: 'YENİ TEK ATA', emoji: '🪙' },
         { key: 'ESKI TEK ATA', label: 'ESKİ TEK ATA', emoji: '🪙' },
         { key: 'YENI KREMSIYE', label: 'YENİ KREMSİYE', emoji: '🪙' },
-        { key: 'ESKI KREMSIYE', label: 'ESKİ KREMSİYE', emoji: '🪙' },
-        { key: 'GRAM ALTIN', label: 'GRAM ALTIN', emoji: '🪙' }
+        { key: 'ESKI KREMSIYE', label: 'ESKİ KREMSİYE', emoji: '🪙' }
       ];
 
       products.forEach(product => {
