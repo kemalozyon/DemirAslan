@@ -431,21 +431,8 @@
     <div id="price-grid" class="price-table"></div>
   </div>
 
-  <div class="market-info">
-    <div class="author">by Kemal Özyön</div>
-    <div class="time-container">
-      <div id="current-time"></div>
-      <div id="current-date"></div>
-    </div>
-    <div class="copyright">Copyright DEMİRASLAN</div>
-  </div>
-
   <script>
-    // Request current colors/settings when the page loads
     document.addEventListener('DOMContentLoaded', function() {
-      // Initialize time and date
-      updateDateTime();
-      
       // Request current display settings from main process
       window.electron.send('get-display-colors');
     });
@@ -456,7 +443,7 @@
       // Make sure all text elements use the correct text color when theme changes
       setTimeout(() => {
         const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim();
-        const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell, #current-time, #current-date, .author, .copyright');
+        const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell');
         textElements.forEach(element => {
           element.style.color = textColor;
         });
@@ -479,6 +466,12 @@
       
       if (colors.textColor) {
         root.style.setProperty('--text-color', colors.textColor);
+        
+        // Apply text color to all text elements
+        const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell');
+        textElements.forEach(element => {
+          element.style.color = colors.textColor;
+        });
       }
       
       if (colors.boxColor) {
@@ -510,19 +503,6 @@
         }
       }
     });
-
-    function updateDateTime() {
-      const now = new Date();
-      const dateOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-      const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-      
-      document.getElementById('current-date').textContent = now.toLocaleDateString('tr-TR', dateOptions);
-      document.getElementById('current-time').textContent = now.toLocaleTimeString('tr-TR', timeOptions);
-    }
-
-    // Update date and time every second
-    setInterval(updateDateTime, 1000);
-    updateDateTime(); // Initial update
 
     function updateDisplay(prices) {
       const priceGrid = document.getElementById('price-grid');
@@ -562,7 +542,7 @@
       priceGrid.appendChild(table);
       
       // Apply text colors to all elements
-      const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell, #current-time, #current-date, .author, .copyright');
+      const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell');
       textElements.forEach(element => {
         element.style.color = 'var(--text-color)';
       });
@@ -600,7 +580,7 @@
         root.style.setProperty('--text-color', colors.textColor);
         
         // Apply text color to all text elements
-        const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell, #current-time, #current-date, .author, .copyright');
+        const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell');
         textElements.forEach(element => {
           element.style.color = colors.textColor;
         });
