@@ -310,15 +310,6 @@
       color: var(--text-color);
     }
     
-    /* Common text elements should use text color variable */
-    :root .time,
-    :root .date,
-    :root #current-time,
-    :root .last-updated,
-    :root .author {
-      color: var(--text-color);
-    }
-
     /* Override product emoji color to always be gold */
     :root .product-emoji {
       color: var(--header-color);
@@ -379,18 +370,35 @@
       right: 0;
       width: 100%;
       display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+    }
+    
+    .time-container {
+      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
-      gap: 3px;
+      gap: 2px;
     }
     
-    .time, .last-updated, .author {
-      text-align: center;
-      width: 100%;
+    #current-time {
+      font-weight: 800;
       font-size: min(2.4vw, 1.2rem);
+    }
+    
+    #current-date {
       font-weight: 600;
+      font-size: min(2vw, 1rem);
+    }
+    
+    .author, .copyright {
+      font-weight: 400;
+      font-size: min(1.6vw, 0.8rem);
+      opacity: 0.7;
     }
   </style>
 </head>
@@ -424,12 +432,12 @@
   </div>
 
   <div class="market-info">
-    <div class="time">
-      <span id="current-date" class="date"></span>
-      <span id="current-time"></span>
-    </div>
-    <div id="lastUpdated" class="last-updated"></div>
     <div class="author">by Kemal Özyön</div>
+    <div class="time-container">
+      <div id="current-time"></div>
+      <div id="current-date"></div>
+    </div>
+    <div class="copyright">Copyright DEMİRASLAN</div>
   </div>
 
   <script>
@@ -437,9 +445,6 @@
     document.addEventListener('DOMContentLoaded', function() {
       // Initialize time and date
       updateDateTime();
-      
-      // Initialize last updated
-      updateLastUpdated();
       
       // Request current display settings from main process
       window.electron.send('get-display-colors');
@@ -451,7 +456,7 @@
       // Make sure all text elements use the correct text color when theme changes
       setTimeout(() => {
         const textColor = getComputedStyle(document.documentElement).getPropertyValue('--text-color').trim();
-        const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell, .time, .date, #current-time, .last-updated, .author');
+        const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell, #current-time, #current-date, .author, .copyright');
         textElements.forEach(element => {
           element.style.color = textColor;
         });
@@ -535,7 +540,8 @@
         { key: '24 Ayar', label: 'YENİ YARIMLIK', emoji: '🪙' },
         { key: 'ESKI TEK ATA', label: 'ESKİ YARIMLIK', emoji: '🪙' },
         { key: 'YENI KREMSIYE', label: 'YENİ TÜMLÜK', emoji: '🪙' },
-        { key: 'ESKI KREMSIYE', label: 'ESKİ TÜMLÜK', emoji: '🪙' }
+        { key: 'ESKI KREMSIYE', label: 'ESKİ TÜMLÜK', emoji: '🪙' },
+        { key: 'GRAM ALTIN', label: 'GRAM ALTIN', emoji: '🪙' }
       ];
 
       products.forEach(product => {
@@ -556,7 +562,7 @@
       priceGrid.appendChild(table);
       
       // Apply text colors to all elements
-      const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell, .time, .date, #current-time, .last-updated, .author');
+      const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell, #current-time, #current-date, .author, .copyright');
       textElements.forEach(element => {
         element.style.color = 'var(--text-color)';
       });
@@ -567,9 +573,6 @@
       console.log('Received prices in display:', prices);
       updateDisplay(prices);
       
-      // Update last updated time
-      updateLastUpdated();
-      
       // Flash animation for updated prices
       const priceElements = document.querySelectorAll('.price-cell');
       priceElements.forEach(el => {
@@ -578,22 +581,6 @@
         el.classList.add('flash');
       });
     });
-
-    // Function to update the last updated time
-    function updateLastUpdated() {
-      const now = new Date();
-      const formattedDate = now.toLocaleDateString('tr-TR', {
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
-      });
-      const formattedTime = now.toLocaleTimeString('tr-TR', {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-
-      document.getElementById('lastUpdated').textContent = `Son Güncelleme: ${formattedDate} ${formattedTime}`;
-    }
 
     // Handle custom color updates
     window.electron.receive('update-display-colors', (colors) => {
@@ -613,7 +600,7 @@
         root.style.setProperty('--text-color', colors.textColor);
         
         // Apply text color to all text elements
-        const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell, .time, .date, #current-time, .last-updated, .author');
+        const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell, #current-time, #current-date, .author, .copyright');
         textElements.forEach(element => {
           element.style.color = colors.textColor;
         });
@@ -650,9 +637,6 @@
         }
       }
     });
-
-    // Update the last updated time on page load
-    document.addEventListener('DOMContentLoaded', updateLastUpdated);
   </script>
 </body>
 </html> 
