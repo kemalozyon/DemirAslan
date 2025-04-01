@@ -536,7 +536,7 @@
         </div>
         <div class="customize-body">
           <div class="customize-section">
-            <h3>Tema Seçimi</h3>
+            <h3>Yönetim Ekranı Tema Seçimi</h3>
             <div class="theme-buttons">
               <button class="reset-dark" onclick="resetToDarkMode()">Koyu Temayı Ayarla</button>
               <button class="reset-light" onclick="resetToLightMode()">Açık Temayı Ayarla</button>
@@ -962,38 +962,15 @@
 
     // Reset to dark mode
     function resetToDarkMode() {
-      // Set display colors
-      document.getElementById('bgColorPicker').value = '#000000';
-      document.getElementById('titleColorPicker').value = '#ffd700';
-      document.getElementById('textColorPicker').value = '#ffffff';
-      document.getElementById('shadowColorPicker').value = '#ffd700';
-      document.getElementById('boxColorPicker').value = '#333333';
-      document.getElementById('titleToggle').checked = true;
-      
-      // Apply the changes immediately
-      const colorConfig = {
-        bgColor: '#000000',
-        titleColor: '#ffd700',
-        textColor: '#ffffff',
-        shadowColor: '#ffd700',
-        boxColor: '#333333',
-        showTitle: true
-      };
-      
-      // Send color config to main process
-      window.electron.send('update-display-colors', colorConfig);
-      
-      // Also set app theme to dark if it's currently light
+      // Set theme for only the management interface
       const body = document.body;
       if (body.hasAttribute('data-theme')) {
         body.removeAttribute('data-theme');
-        // Notify main process about theme change
-        window.electron.send('theme-change', 'dark');
       }
       
       // Show success message
       const status = document.getElementById('status');
-      status.textContent = 'Koyu tema ayarlandı';
+      status.textContent = 'Yönetim ekranı için koyu tema ayarlandı';
       status.className = 'status success';
       
       // Hide the modal
@@ -1007,38 +984,15 @@
 
     // Reset to light mode
     function resetToLightMode() {
-      // Set display colors
-      document.getElementById('bgColorPicker').value = '#ffffff';
-      document.getElementById('titleColorPicker').value = '#d4af37';
-      document.getElementById('textColorPicker').value = '#000000';
-      document.getElementById('shadowColorPicker').value = '#ffd700';
-      document.getElementById('boxColorPicker').value = '#f5f5f5';
-      document.getElementById('titleToggle').checked = true;
-      
-      // Apply the changes immediately
-      const colorConfig = {
-        bgColor: '#ffffff',
-        titleColor: '#d4af37',
-        textColor: '#000000',
-        shadowColor: '#ffd700',
-        boxColor: '#f5f5f5',
-        showTitle: true
-      };
-      
-      // Send color config to main process
-      window.electron.send('update-display-colors', colorConfig);
-      
-      // Also set app theme to light if it's currently dark
+      // Set theme for only the management interface
       const body = document.body;
       if (!body.hasAttribute('data-theme')) {
         body.setAttribute('data-theme', 'light');
-        // Notify main process about theme change
-        window.electron.send('theme-change', 'light');
       }
       
       // Show success message
       const status = document.getElementById('status');
-      status.textContent = 'Açık tema ayarlandı';
+      status.textContent = 'Yönetim ekranı için açık tema ayarlandı';
       status.className = 'status success';
       
       // Hide the modal
