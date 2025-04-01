@@ -132,17 +132,46 @@
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
     }
 
-    .header::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(20vw, 150px);
+    .animated-underline {
+      position: relative;
+      width: 0;
       height: 3px;
       background: var(--header-color);
       border-radius: 2px;
+      margin: 0 auto;
+      margin-top: -4px;
+      margin-bottom: 10px;
       box-shadow: 0 0 25px 4px var(--glow-color);
+      animation: lineGrow 2s ease-in-out forwards, linePulse 3s infinite ease-in-out 2s;
+    }
+    
+    @keyframes lineGrow {
+      0% {
+        width: 0;
+        opacity: 0;
+      }
+      100% {
+        width: min(30vw, 300px);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes linePulse {
+      0% {
+        width: min(30vw, 300px);
+        box-shadow: 0 0 25px 4px var(--glow-color);
+        opacity: 1;
+      }
+      50% {
+        width: min(32vw, 320px);
+        box-shadow: 0 0 30px 8px var(--glow-color);
+        opacity: 0.9;
+      }
+      100% {
+        width: min(30vw, 300px);
+        box-shadow: 0 0 25px 4px var(--glow-color);
+        opacity: 1;
+      }
     }
 
     .subheader {
@@ -440,6 +469,7 @@
         </svg>
       </div>
       <h1 class="header">DEMİRASLAN</h1>
+      <div class="animated-underline"></div>
     </div>
     
     <table class="price-table">
