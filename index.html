@@ -463,6 +463,58 @@
       background-color: #444;
       border-color: #777;
     }
+
+    .scheme-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .scheme-save, .scheme-select {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    
+    .scheme-input, .scheme-dropdown {
+      flex: 1;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      background: var(--input-bg);
+      color: var(--text-color);
+    }
+    
+    .scheme-button {
+      padding: 8px 12px;
+      background: var(--header-color);
+      color: var(--bg-color);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .scheme-button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .scheme-delete {
+      background-color: #e74c3c;
+    }
+    
+    .scheme-default {
+      background-color: #2ecc71;
+    }
+    
+    .default-scheme-marker {
+      font-size: 12px;
+      color: #2ecc71;
+      margin-left: 5px;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
@@ -488,6 +540,23 @@
             <div class="theme-buttons">
               <button class="reset-dark" onclick="resetToDarkMode()">Koyu Temayı Ayarla</button>
               <button class="reset-light" onclick="resetToLightMode()">Açık Temayı Ayarla</button>
+            </div>
+          </div>
+          
+          <div class="customize-section">
+            <h3>Renk Şemaları</h3>
+            <div class="scheme-controls">
+              <div class="scheme-save">
+                <input type="text" id="schemeName" placeholder="Şema adı" class="scheme-input">
+                <button class="scheme-button" onclick="saveColorScheme()">Şemayı Kaydet</button>
+              </div>
+              <div class="scheme-select">
+                <select id="savedSchemes" class="scheme-dropdown" onchange="loadColorSchemeOnChange()">
+                  <option value="">Kaydedilmiş şemalar</option>
+                </select>
+                <button class="scheme-button scheme-default" onclick="setAsDefaultScheme()">Varsayılan Yap</button>
+                <button class="scheme-button scheme-delete" onclick="deleteColorScheme()">Sil</button>
+              </div>
             </div>
           </div>
           
@@ -738,6 +807,20 @@
     document.addEventListener('DOMContentLoaded', function() {
       const displayToggleButton = document.querySelector('.display-toggle');
       displayToggleButton.textContent = 'Ekranı Göster';
+      
+      const toggleGroup = document.querySelector('.toggle-group');
+      const toggleInput = document.getElementById('titleToggle');
+      
+      toggleGroup.addEventListener('click', function(e) {
+        // Don't toggle if clicking the checkbox directly (it handles itself)
+        if (e.target !== toggleInput) {
+          toggleInput.checked = !toggleInput.checked;
+          console.log('Toggle switched to:', toggleInput.checked);
+        }
+      });
+      
+      // Request default scheme name when app starts
+      window.electron.send('get-default-scheme');
     });
 
     document.getElementById('priceForm').addEventListener('submit', function(e) {
@@ -818,22 +901,9 @@
       } else {
         modal.style.display = 'block';
         loadCurrentColors();
+        loadSavedSchemes();
       }
     }
-    
-    // Add a click handler for the toggle group
-    document.addEventListener('DOMContentLoaded', function() {
-      const toggleGroup = document.querySelector('.toggle-group');
-      const toggleInput = document.getElementById('titleToggle');
-      
-      toggleGroup.addEventListener('click', function(e) {
-        // Don't toggle if clicking the checkbox directly (it handles itself)
-        if (e.target !== toggleInput) {
-          toggleInput.checked = !toggleInput.checked;
-          console.log('Toggle switched to:', toggleInput.checked);
-        }
-      });
-    });
     
     // Load current colors to the color pickers
     function loadCurrentColors() {
@@ -978,6 +1048,219 @@
       setTimeout(() => {
         status.className = 'status';
       }, 3000);
+    }
+
+    // Save current color scheme
+    function saveColorScheme() {
+      const schemeName = document.getElementById('schemeName').value.trim();
+      
+      if (!schemeName) {
+        alert('Lütfen şema için bir isim girin');
+        return;
+      }
+      
+      const colorScheme = {
+        bgColor: document.getElementById('bgColorPicker').value,
+        titleColor: document.getElementById('titleColorPicker').value,
+        textColor: document.getElementById('textColorPicker').value,
+        shadowColor: document.getElementById('shadowColorPicker').value,
+        boxColor: document.getElementById('boxColorPicker').value,
+        showTitle: document.getElementById('titleToggle').checked
+      };
+      
+      // Send to main process to save
+      window.electron.send('save-color-scheme', { name: schemeName, scheme: colorScheme });
+      
+      // Show success message
+      const status = document.getElementById('status');
+      status.textContent = `"${schemeName}" şeması kaydedildi`;
+      status.className = 'status success';
+      
+      // Clear scheme name input
+      document.getElementById('schemeName').value = '';
+      
+      // Update the dropdown
+      loadSavedSchemes();
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        status.className = 'status';
+      }, 3000);
+    }
+    
+    // Load saved color scheme
+    function loadColorScheme() {
+      const select = document.getElementById('savedSchemes');
+      const selectedScheme = select.value;
+      
+      if (!selectedScheme) {
+        return;
+      }
+      
+      // Request the scheme from main process
+      window.electron.send('load-color-scheme', selectedScheme);
+    }
+    
+    // Automatically load color scheme when dropdown selection changes
+    function loadColorSchemeOnChange() {
+      const select = document.getElementById('savedSchemes');
+      const selectedScheme = select.value;
+      
+      if (!selectedScheme) {
+        return;
+      }
+      
+      // Request the scheme from main process
+      window.electron.send('load-color-scheme', selectedScheme);
+      
+      // Show loading message
+      const status = document.getElementById('status');
+      status.textContent = `"${selectedScheme}" şeması yükleniyor...`;
+      status.className = 'status success';
+    }
+    
+    // Delete saved color scheme
+    function deleteColorScheme() {
+      const select = document.getElementById('savedSchemes');
+      const selectedScheme = select.value;
+      
+      if (!selectedScheme) {
+        return;
+      }
+      
+      if (confirm(`"${selectedScheme}" şemasını silmek istediğinizden emin misiniz?`)) {
+        // Send delete request to main process
+        window.electron.send('delete-color-scheme', selectedScheme);
+        
+        // Update the dropdown
+        loadSavedSchemes();
+        
+        // Show success message
+        const status = document.getElementById('status');
+        status.textContent = `"${selectedScheme}" şeması silindi`;
+        status.className = 'status success';
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          status.className = 'status';
+        }, 3000);
+      }
+    }
+    
+    // Load saved schemes to dropdown
+    function loadSavedSchemes() {
+      window.electron.send('get-saved-schemes');
+    }
+    
+    // Handle receiving saved schemes from main process
+    window.electron.receive('saved-schemes', (schemes) => {
+      const select = document.getElementById('savedSchemes');
+      
+      // Clear current options except the first placeholder
+      while (select.options.length > 1) {
+        select.remove(1);
+      }
+      
+      // Add schemes to dropdown
+      schemes.forEach(scheme => {
+        const option = document.createElement('option');
+        option.value = scheme;
+        option.textContent = scheme;
+        select.appendChild(option);
+      });
+      
+      // Request default scheme to mark it
+      window.electron.send('get-default-scheme');
+    });
+    
+    // Handle receiving loaded color scheme from main process
+    window.electron.receive('color-scheme-loaded', (colorScheme) => {
+      if (colorScheme) {
+        document.getElementById('bgColorPicker').value = colorScheme.bgColor || '#000000';
+        document.getElementById('titleColorPicker').value = colorScheme.titleColor || '#ffd700';
+        document.getElementById('textColorPicker').value = colorScheme.textColor || '#ffffff';
+        document.getElementById('shadowColorPicker').value = colorScheme.shadowColor || '#ffd700';
+        document.getElementById('boxColorPicker').value = colorScheme.boxColor || '#333333';
+        
+        // Set the title toggle if it exists in the scheme
+        if (colorScheme.hasOwnProperty('showTitle')) {
+          document.getElementById('titleToggle').checked = colorScheme.showTitle;
+        }
+        
+        // Show success message
+        const status = document.getElementById('status');
+        const schemeName = document.getElementById('savedSchemes').value;
+        status.textContent = `"${schemeName}" şeması yüklendi`;
+        status.className = 'status success';
+        
+        // Clear success message after 3 seconds
+        setTimeout(() => {
+          status.className = 'status';
+        }, 3000);
+      }
+    });
+
+    // Handle colors update confirmation
+    window.electron.receive('colors-updated-confirmation', (success) => {
+      if (success) {
+        console.log('Color update confirmed by main process');
+      }
+    });
+
+    // Set color scheme as default
+    function setAsDefaultScheme() {
+      const select = document.getElementById('savedSchemes');
+      const selectedScheme = select.value;
+      
+      if (!selectedScheme) {
+        return;
+      }
+      
+      // Request to set as default
+      window.electron.send('set-default-scheme', selectedScheme);
+    }
+    
+    // Handle receiving default scheme name from main process
+    window.electron.receive('default-scheme-name', (defaultSchemeName) => {
+      updateDefaultSchemeMarker(defaultSchemeName);
+    });
+    
+    // Handle receiving default scheme set confirmation from main process
+    window.electron.receive('default-scheme-set', (schemeName) => {
+      updateDefaultSchemeMarker(schemeName);
+      
+      // Show success message
+      const status = document.getElementById('status');
+      status.textContent = `"${schemeName}" varsayılan şema olarak ayarlandı`;
+      status.className = 'status success';
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        status.className = 'status';
+      }, 3000);
+    });
+    
+    // Handle receiving default scheme loaded notification from main process
+    window.electron.receive('default-scheme-loaded', (defaultSchemeName) => {
+      updateDefaultSchemeMarker(defaultSchemeName);
+    });
+    
+    // Update the dropdown to indicate which scheme is the default
+    function updateDefaultSchemeMarker(defaultSchemeName) {
+      const select = document.getElementById('savedSchemes');
+      
+      // First remove any existing default markers
+      for (let i = 0; i < select.options.length; i++) {
+        select.options[i].textContent = select.options[i].textContent.replace(' (Varsayılan)', '');
+      }
+      
+      // Mark the default scheme
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === defaultSchemeName) {
+          select.options[i].textContent += ' (Varsayılan)';
+          break;
+        }
+      }
     }
   </script>
 </body>
