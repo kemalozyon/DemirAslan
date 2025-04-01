@@ -206,13 +206,26 @@
     }
 
     .product-emoji {
-      font-size: min(3.5vw, 2.4rem);
-      color: var(--header-color);
-      text-shadow: 0 0 15px rgba(255, 215, 0, 0.9);
+      width: min(3.5vw, 2.4rem);
+      height: min(3.5vw, 2.4rem);
+      color: var(--text-color);
       flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+
+    .product-emoji svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .product-emoji svg path {
+      fill: var(--text-color);
+    }
+
+    [data-theme="light"] .product-emoji svg path {
+      fill: var(--text-color);
     }
 
     .product-label {
@@ -269,7 +282,22 @@
       text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
+      gap: min(1vw, 0.5rem);
+      padding-left: min(2vw, 1.5rem);
+    }
+
+    .currency-symbol {
+      font-weight: 900;
+      opacity: 0.9;
+      font-size: 0.9em;
+      margin-right: min(1vw, 0.5rem);
+    }
+
+    .price-value {
+      flex: 1;
+      text-align: center;
+      margin-right: min(2vw, 1.5rem);
     }
 
     .price-row:hover .price-cell {
@@ -511,17 +539,23 @@
       const table = document.createElement('table');
       table.className = 'price-table';
 
+      const diamondSvg = `
+        <svg viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2.103 12.052l13.398 16.629-5.373-16.629h-8.025zM11.584 12.052l4.745 16.663 4.083-16.663h-8.828zM17.051 28.681l12.898-16.629h-7.963l-4.935 16.629zM29.979 10.964l-3.867-6.612-3.869 6.612h7.736zM24.896 3.973h-7.736l3.867 6.839 3.869-6.839zM19.838 10.964l-3.867-6.612-3.868 6.612h7.735zM14.839 3.973h-7.735l3.868 6.839 3.867-6.839zM5.889 4.352l-3.867 6.612h7.735l-3.868-6.612z"></path>
+        </svg>
+      `;
+
       const products = [
-        { key: '22 Ayar', label: '22 AYAR', emoji: '🪙' },
-        { key: 'Çeyrek', label: 'YENİ ÇEYREK', emoji: '🪙' },
-        { key: 'B.Çeyrek', label: 'ESKİ ÇEYREK', emoji: '🪙' },
-        { key: 'Yarım', label: 'YENİ BÜYÜK ÇEYREK', emoji: '🪙' },
-        { key: 'Tam', label: 'ESKİ BÜYÜK ÇEYREK', emoji: '🪙' },
-        { key: '24 Ayar', label: 'YENİ YARIMLIK', emoji: '🪙' },
-        { key: 'ESKI TEK ATA', label: 'ESKİ YARIMLIK', emoji: '🪙' },
-        { key: 'YENI KREMSIYE', label: 'YENİ TÜMLÜK', emoji: '🪙' },
-        { key: 'ESKI KREMSIYE', label: 'ESKİ TÜMLÜK', emoji: '🪙' },
-        { key: 'GRAM ALTIN', label: 'GRAM ALTIN', emoji: '🪙' }
+        { key: '22 Ayar', label: '22 AYAR', emoji: diamondSvg },
+        { key: 'Çeyrek', label: 'YENİ ÇEYREK', emoji: diamondSvg },
+        { key: 'B.Çeyrek', label: 'ESKİ ÇEYREK', emoji: diamondSvg },
+        { key: 'Yarım', label: 'YENİ BÜYÜK ÇEYREK', emoji: diamondSvg },
+        { key: 'Tam', label: 'ESKİ BÜYÜK ÇEYREK', emoji: diamondSvg },
+        { key: '24 Ayar', label: 'YENİ YARIMLIK', emoji: diamondSvg },
+        { key: 'ESKI TEK ATA', label: 'ESKİ YARIMLIK', emoji: diamondSvg },
+        { key: 'YENI KREMSIYE', label: 'YENİ TÜMLÜK', emoji: diamondSvg },
+        { key: 'ESKI KREMSIYE', label: 'ESKİ TÜMLÜK', emoji: diamondSvg },
+        { key: 'GRAM ALTIN', label: 'GRAM ALTIN', emoji: diamondSvg }
       ];
 
       products.forEach(product => {
@@ -533,18 +567,28 @@
             <span class="product-emoji">${product.emoji}</span>
             <span class="product-label">${product.label}</span>
           </td>
-          <td class="price-cell">${Math.floor(price.buyPrice).toLocaleString('tr-TR')}</td>
-          <td class="price-cell">${Math.floor(price.sellPrice).toLocaleString('tr-TR')}</td>
+          <td class="price-cell">
+            <span class="currency-symbol">₺</span>
+            <span class="price-value">${Math.floor(price.buyPrice).toLocaleString('tr-TR')}</span>
+          </td>
+          <td class="price-cell">
+            <span class="currency-symbol">₺</span>
+            <span class="price-value">${Math.floor(price.sellPrice).toLocaleString('tr-TR')}</span>
+          </td>
         `;
         table.appendChild(row);
       });
 
       priceGrid.appendChild(table);
       
-      // Apply text colors to all elements
-      const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell');
+      // Apply text colors to all elements including SVG paths
+      const textElements = document.querySelectorAll('.product-label, .price-cell, .header-cell, .product-emoji svg path');
       textElements.forEach(element => {
-        element.style.color = 'var(--text-color)';
+        if (element.tagName === 'path') {
+          element.style.fill = 'var(--text-color)';
+        } else {
+          element.style.color = 'var(--text-color)';
+        }
       });
     }
 
