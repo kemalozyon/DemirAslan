@@ -725,6 +725,17 @@
       cursor: pointer;
       color: #333333;
     }
+
+    /* Add style for calculated fields */
+    .calculated-price {
+      background-color: rgba(255, 215, 0, 0.1) !important;
+      border: 1px solid rgba(255, 215, 0, 0.4) !important;
+    }
+    
+    [data-theme="light"] .calculated-price {
+      background-color: rgba(255, 215, 0, 0.15) !important;
+      border: 1px solid rgba(255, 215, 0, 0.5) !important;
+    }
   </style>
 </head>
 <body data-theme="light">
@@ -834,11 +845,11 @@
         <div class="price-inputs">
           <div class="input-group">
             <label for="ceyrekAlis">Alış Fiyatı (₺)</label>
-            <input type="number" id="ceyrekAlis" step="0.01" required>
+            <input type="number" id="ceyrekAlis" step="0.01" required oninput="calculateRelatedPrices('buy')">
           </div>
           <div class="input-group">
             <label for="ceyrekSatis">Satış Fiyatı (₺)</label>
-            <input type="number" id="ceyrekSatis" step="0.01" required>
+            <input type="number" id="ceyrekSatis" step="0.01" required oninput="calculateRelatedPrices('sell')">
           </div>
         </div>
       </div>
@@ -866,11 +877,11 @@
         <div class="price-inputs">
           <div class="input-group">
             <label for="yarimAlis">Alış Fiyatı (₺)</label>
-            <input type="number" id="yarimAlis" step="0.01" required>
+            <input type="number" id="yarimAlis" step="0.01" required readonly class="calculated-price">
           </div>
           <div class="input-group">
             <label for="yarimSatis">Satış Fiyatı (₺)</label>
-            <input type="number" id="yarimSatis" step="0.01" required>
+            <input type="number" id="yarimSatis" step="0.01" required readonly class="calculated-price">
           </div>
         </div>
       </div>
@@ -898,11 +909,11 @@
         <div class="price-inputs">
           <div class="input-group">
             <label for="24ayarAlis">Alış Fiyatı (₺)</label>
-            <input type="number" id="24ayarAlis" step="0.01" required>
+            <input type="number" id="24ayarAlis" step="0.01" required readonly class="calculated-price">
           </div>
           <div class="input-group">
             <label for="24ayarSatis">Satış Fiyatı (₺)</label>
-            <input type="number" id="24ayarSatis" step="0.01" required>
+            <input type="number" id="24ayarSatis" step="0.01" required readonly class="calculated-price">
           </div>
         </div>
       </div>
@@ -930,11 +941,11 @@
         <div class="price-inputs">
           <div class="input-group">
             <label for="yeniKremsiyeAlis">Alış Fiyatı (₺)</label>
-            <input type="number" id="yeniKremsiyeAlis" step="0.01" required>
+            <input type="number" id="yeniKremsiyeAlis" step="0.01" required readonly class="calculated-price">
           </div>
           <div class="input-group">
             <label for="yeniKremsiyeSatis">Satış Fiyatı (₺)</label>
-            <input type="number" id="yeniKremsiyeSatis" step="0.01" required>
+            <input type="number" id="yeniKremsiyeSatis" step="0.01" required readonly class="calculated-price">
           </div>
         </div>
       </div>
@@ -1033,10 +1044,48 @@
     let currentDisplayTheme = 'light';
     let isDisplayVisible = false;
 
+    // Function to calculate related prices based on New Quarter price
+    function calculateRelatedPrices(type) {
+      if (type === 'buy') {
+        const ceyrekAlis = document.getElementById('ceyrekAlis').value;
+        if (ceyrekAlis && !isNaN(ceyrekAlis)) {
+          const ceyrekValue = parseFloat(ceyrekAlis);
+          
+          // Calculate related buy prices (2x, 4x, 10x)
+          document.getElementById('yarimAlis').value = (ceyrekValue * 2).toFixed(2);
+          document.getElementById('24ayarAlis').value = (ceyrekValue * 4).toFixed(2);
+          document.getElementById('yeniKremsiyeAlis').value = (ceyrekValue * 10).toFixed(2);
+        }
+      } else if (type === 'sell') {
+        const ceyrekSatis = document.getElementById('ceyrekSatis').value;
+        if (ceyrekSatis && !isNaN(ceyrekSatis)) {
+          const ceyrekValue = parseFloat(ceyrekSatis);
+          
+          // Calculate related sell prices (2x, 4x, 10x)
+          document.getElementById('yarimSatis').value = (ceyrekValue * 2).toFixed(2);
+          document.getElementById('24ayarSatis').value = (ceyrekValue * 4).toFixed(2);
+          document.getElementById('yeniKremsiyeSatis').value = (ceyrekValue * 10).toFixed(2);
+        }
+      }
+    }
+    
+    // Check for any initial values and calculate on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      calculateRelatedPrices('buy');
+      calculateRelatedPrices('sell');
+    });
+
     // Clear all input fields
     function clearAllInputs() {
       const inputs = document.querySelectorAll('input[type="number"]');
       inputs.forEach(input => {
+        if (!input.classList.contains('calculated-price')) {
+          input.value = '';
+        }
+      });
+      
+      // Clear calculated fields as well
+      document.querySelectorAll('.calculated-price').forEach(input => {
         input.value = '';
       });
       
@@ -1089,6 +1138,10 @@
 
     document.getElementById('priceForm').addEventListener('submit', function(e) {
       e.preventDefault();
+      
+      // Ensure all calculated fields are properly updated before submitting
+      calculateRelatedPrices('buy');
+      calculateRelatedPrices('sell');
       
       const prices = [
         {
