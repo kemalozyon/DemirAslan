@@ -75,6 +75,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      -webkit-app-region: drag;
     }
 
     .logo {
@@ -532,6 +533,48 @@
     .clock-without-title:hover {
       transform: translateX(-50%) translateY(-2px);
     }
+
+    /* Draggable regions for window movement */
+    .title-container,
+    .date-box,
+    .drag-handle {
+      -webkit-app-region: drag; /* Makes these areas draggable */
+    }
+
+    /* Prevent drag on interactive elements */
+    .diamond-logo,
+    .diamond-logo svg,
+    .header-row,
+    .price-row,
+    input,
+    button,
+    a {
+      -webkit-app-region: no-drag;
+    }
+    
+    /* Drag handle for moving the window */
+    .drag-handle {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      width: 24px;
+      height: 24px;
+      cursor: move;
+      opacity: 0.2;
+      transition: opacity 0.3s ease;
+      z-index: 9999;
+      color: var(--text-color);
+    }
+    
+    .drag-handle:hover {
+      opacity: 0.8;
+    }
+    
+    .drag-handle svg {
+      width: 100%;
+      height: 100%;
+      fill: currentColor;
+    }
   </style>
 </head>
 <body>
@@ -572,6 +615,13 @@
     </table>
 
     <div id="price-grid" class="price-table"></div>
+
+    <!-- Drag handle for moving window -->
+    <div class="drag-handle" id="dragHandle">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M10,9A1,1 0 0,1 11,8A1,1 0 0,1 12,9A1,1 0 0,1 11,10A1,1 0 0,1 10,9M10,13A1,1 0 0,1 11,12A1,1 0 0,1 12,13A1,1 0 0,1 11,14A1,1 0 0,1 10,13M10,17A1,1 0 0,1 11,16A1,1 0 0,1 12,17A1,1 0 0,1 11,18A1,1 0 0,1 10,17M14,9A1,1 0 0,1 15,8A1,1 0 0,1 16,9A1,1 0 0,1 15,10A1,1 0 0,1 14,9M14,13A1,1 0 0,1 15,12A1,1 0 0,1 16,13A1,1 0 0,1 15,14A1,1 0 0,1 14,13M14,17A1,1 0 0,1 15,16A1,1 0 0,1 16,17A1,1 0 0,1 15,18A1,1 0 0,1 14,17M18,9A1,1 0 0,1 19,8A1,1 0 0,1 20,9A1,1 0 0,1 19,10A1,1 0 0,1 18,9M18,13A1,1 0 0,1 19,12A1,1 0 0,1 20,13A1,1 0 0,1 19,14A1,1 0 0,1 18,13M18,17A1,1 0 0,1 19,16A1,1 0 0,1 20,17A1,1 0 0,1 19,18A1,1 0 0,1 18,17M6,9A1,1 0 0,1 7,8A1,1 0 0,1 8,9A1,1 0 0,1 7,10A1,1 0 0,1 6,9M6,13A1,1 0 0,1 7,12A1,1 0 0,1 8,13A1,1 0 0,1 7,14A1,1 0 0,1 6,13M6,17A1,1 0 0,1 7,16A1,1 0 0,1 8,17A1,1 0 0,1 7,18A1,1 0 0,1 6,17"></path>
+      </svg>
+    </div>
   </div>
 
   <script>
@@ -583,6 +633,19 @@
       updateClock();
       // Update clock every second
       setInterval(updateClock, 1000);
+
+      // No need for specific drag functionality now, CSS handles it
+      /* 
+      // Add drag functionality for the window
+      const dragHandle = document.getElementById('dragHandle');
+      
+      if (dragHandle) {
+        dragHandle.addEventListener('mousedown', (e) => {
+          e.preventDefault();
+          window.electron.send('start-window-drag');
+        });
+      }
+      */
     });
     
     // Function to update the clock with current time

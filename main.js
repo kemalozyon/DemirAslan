@@ -369,4 +369,12 @@ ipcMain.on('get-default-scheme', (event) => {
   if (mainWindow && defaultSchemeName) {
     mainWindow.webContents.send('default-scheme-name', defaultSchemeName);
   }
+});
+
+// Handle display window dragging
+ipcMain.on('start-window-drag', (event) => {
+  if (displayWindow) {
+    displayWindow.setMovable(true);
+    displayWindow.beginDrag();  // Modern Electron API
+  }
 }); 
