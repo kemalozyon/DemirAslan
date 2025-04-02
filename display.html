@@ -144,7 +144,7 @@
       background: var(--header-color);
       border-radius: 2px;
       margin: 0 auto;
-      margin-top: -4px;
+      margin-top: -10px;
       margin-bottom: 10px;
       box-shadow: 0 0 25px 4px var(--glow-color);
       animation: lineGrow 2s ease-in-out forwards, linePulse 3s infinite ease-in-out 2s;
@@ -156,24 +156,24 @@
         opacity: 0;
       }
       100% {
-        width: min(30vw, 300px);
+        width: 75%;
         opacity: 1;
       }
     }
     
     @keyframes linePulse {
       0% {
-        width: min(30vw, 300px);
+        width: 75%;
         box-shadow: 0 0 25px 4px var(--glow-color);
         opacity: 1;
       }
       50% {
-        width: min(32vw, 320px);
+        width: 80%;
         box-shadow: 0 0 30px 8px var(--glow-color);
         opacity: 0.9;
       }
       100% {
-        width: min(30vw, 300px);
+        width: 75%;
         box-shadow: 0 0 25px 4px var(--glow-color);
         opacity: 1;
       }
@@ -488,13 +488,13 @@
     }
 
     .clock-time, .date-text {
-      font-size: min(3.2vw, 1.6rem);
+      font-size: min(4vw, 2rem);
       font-family: "Zen Dots", sans-serif;
-      font-weight: 400;
+      font-weight: 700;
       font-style: normal;
       width: 100%;
       line-height: 1.2;
-      padding: min(0.5vh, 0.3rem) 0;
+      padding: min(0.6vh, 0.4rem) 0;
     }
 
     .clock-container:hover, .date-box:hover {
