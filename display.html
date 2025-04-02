@@ -457,6 +457,65 @@
       font-size: min(1.6vw, 0.8rem);
       opacity: 0.7;
     }
+
+    /* Clock styling */
+    .clock-container {
+      position: absolute;
+      background: var(--box-color);
+      padding: min(1.5vh, 0.8rem) min(2vw, 1.5rem);
+      border-radius: min(1.5vw, 12px);
+      box-shadow: 0 4px 24px var(--shadow-color), 0 0 15px var(--glow-color);
+      border: 1px solid var(--border-color);
+      color: var(--text-color);
+      font-weight: 800;
+      text-align: center;
+      transition: all 0.3s ease;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: min(0.5vh, 0.3rem);
+    }
+
+    .clock-time {
+      font-size: min(4.5vw, 2.4rem);
+    }
+
+    .clock-date {
+      font-size: min(2.5vw, 1.2rem);
+      font-weight: 600;
+      opacity: 0.85;
+    }
+
+    .clock-container:hover {
+      box-shadow: 0 8px 32px var(--shadow-color), 0 0 25px var(--glow-color);
+      border-color: var(--header-color);
+      transform: translateY(-2px);
+      border-width: 2px;
+    }
+
+    /* Positioning for when title is visible */
+    .clock-with-title {
+      top: min(2vh, 1rem);
+      right: min(16.5vw, 150px);
+      transform: translateX(50%);
+    }
+
+    /* Positioning for when title is hidden */
+    .clock-without-title {
+      bottom: min(2vh, 1rem);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* Adjust hover effect for both positions */
+    .clock-with-title:hover {
+      transform: translateX(50%) translateY(-2px);
+    }
+
+    .clock-without-title:hover {
+      transform: translateX(-50%) translateY(-2px);
+    }
   </style>
 </head>
 <body>
@@ -470,6 +529,12 @@
       </div>
       <h1 class="header">DEMİRASLAN</h1>
       <div class="animated-underline"></div>
+    </div>
+    
+    <!-- Clock element -->
+    <div id="clock" class="clock-container clock-with-title">
+      <div class="clock-time">00:00:00</div>
+      <div class="clock-date">1 OCAK 2023</div>
     </div>
     
     <table class="price-table">
@@ -493,7 +558,45 @@
     document.addEventListener('DOMContentLoaded', function() {
       // Request current display settings from main process
       window.electron.send('get-display-colors');
+      
+      // Initialize clock
+      updateClock();
+      // Update clock every second
+      setInterval(updateClock, 1000);
     });
+    
+    // Function to update the clock with current time
+    function updateClock() {
+      const now = new Date();
+      
+      // Update time
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+      document.querySelector('#clock .clock-time').textContent = `${hours}:${minutes}:${seconds}`;
+      
+      // Update date - DAY MONTH YEAR with month in text
+      const day = now.getDate();
+      const monthNames = [
+        'OCAK', 'ŞUBAT', 'MART', 'NİSAN', 'MAYIS', 'HAZİRAN',
+        'TEMMUZ', 'AĞUSTOS', 'EYLÜL', 'EKİM', 'KASIM', 'ARALIK'
+      ];
+      const monthName = monthNames[now.getMonth()];
+      const year = now.getFullYear();
+      document.querySelector('#clock .clock-date').textContent = `${day} ${monthName} ${year}`;
+    }
+    
+    // Update clock position based on title visibility
+    function updateClockPosition(showTitle) {
+      const clock = document.getElementById('clock');
+      if (showTitle) {
+        clock.classList.remove('clock-without-title');
+        clock.classList.add('clock-with-title');
+      } else {
+        clock.classList.remove('clock-with-title');
+        clock.classList.add('clock-without-title');
+      }
+    }
     
     window.electron.receive('theme-changed', (theme) => {
       document.documentElement.setAttribute('data-theme', theme);
@@ -505,6 +608,9 @@
         textElements.forEach(element => {
           element.style.color = textColor;
         });
+        
+        // Also update the clock color
+        document.getElementById('clock').style.color = textColor;
       }, 100);
     });
 
@@ -530,6 +636,9 @@
         textElements.forEach(element => {
           element.style.color = colors.textColor;
         });
+        
+        // Apply text color to the clock
+        document.getElementById('clock').style.color = colors.textColor;
       }
       
       if (colors.boxColor) {
@@ -555,9 +664,11 @@
         if (!colors.showTitle) {
           titleContainer.classList.add('hidden');
           document.body.classList.add('header-hidden');
+          updateClockPosition(false);
         } else {
           titleContainer.classList.remove('hidden');
           document.body.classList.remove('header-hidden');
+          updateClockPosition(true);
         }
       }
     });
@@ -658,6 +769,9 @@
         textElements.forEach(element => {
           element.style.color = colors.textColor;
         });
+        
+        // Apply text color to the clock
+        document.getElementById('clock').style.color = colors.textColor;
       }
       
       if (colors.boxColor) {
@@ -685,9 +799,11 @@
         if (colors.showTitle) {
           titleContainer.classList.remove('hidden');
           document.body.classList.remove('header-hidden');
+          updateClockPosition(true);
         } else {
           titleContainer.classList.add('hidden');
           document.body.classList.add('header-hidden');
+          updateClockPosition(false);
         }
       }
     });
