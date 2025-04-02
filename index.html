@@ -2,22 +2,29 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Demir Aslan - Kuyumcu Fiyat Yönetimi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Demiraslan - Fiyat Yönetimi</title>
   <style>
     :root {
-      --bg-color: #1a1a1a;
-      --text-color: #fff;
-      --input-bg: #333;
+      --bg-color: #000000;
+      --text-color: #ffffff;
+      --input-bg: #222222;
       --border-color: rgba(255, 215, 0, 0.3);
       --header-color: #ffd700;
+      --shadow-color: rgba(255, 215, 0, 0.3);
+      --glow-color: rgba(255, 215, 0, 0.8);
+      --box-color: #222222;
     }
 
     [data-theme="light"] {
-      --bg-color: #f5f5f5;
-      --text-color: #333;
-      --input-bg: #fff;
-      --border-color: #ddd;
-      --header-color: #b71c1c;
+      --bg-color: #ffffff;
+      --text-color: #000000;
+      --input-bg: #ffffff;
+      --border-color: #ffd700;
+      --header-color: #ffd700;
+      --shadow-color: rgba(255, 215, 0, 0.2);
+      --glow-color: rgba(255, 215, 0, 0.3);
+      --box-color: #f5f5f5;
     }
 
     * {
@@ -26,88 +33,139 @@
       box-sizing: border-box;
     }
 
-    body {
+    html, body {
+      height: 100%;
       margin: 0;
-      padding: 20px;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
       font-family: Arial, sans-serif;
       background: var(--bg-color);
       color: var(--text-color);
-      min-height: 100vh;
       transition: background-color 0.3s, color 0.3s;
+      overflow-x: hidden;
+      padding: 3px;
+      box-sizing: border-box;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
     }
 
     .container {
-      max-width: 1000px;
+      max-width: 900px;
+      width: 100%;
       margin: 0 auto;
-      padding: 20px;
+      padding: 8px;
       background: rgba(255, 255, 255, 0.05);
       border-radius: 15px;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      box-sizing: border-box;
+      max-height: 98vh;
+      overflow-y: auto;
     }
 
     .header-container {
       display: flex;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
-      margin-bottom: 30px;
+      margin-bottom: 5px;
+      flex-direction: column;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 8px;
+      width: 100%;
     }
 
     .header-buttons {
       display: flex;
-      gap: 10px;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 100%;
     }
 
     h1 {
-      color: var(--header-color);
-      font-size: 28px;
-      margin: 0;
+      color: #ffd700;
+      font-size: 24px;
+      margin: 0 0 5px 0;
+      text-align: center;
+      padding: 0 5px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-weight: bold;
+      letter-spacing: 1px;
     }
 
-    .theme-toggle, .display-theme-toggle, .display-toggle {
+    .theme-toggle, .display-theme-toggle, .display-toggle, .customize-toggle, .clear-all {
       background: none;
       border: 2px solid var(--border-color);
       color: var(--text-color);
-      padding: 8px 16px;
-      border-radius: 20px;
+      padding: 10px 20px;
+      border-radius: 25px;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 15px;
       transition: all 0.3s;
+      white-space: nowrap;
+      min-width: 140px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      background-color: rgba(255, 255, 255, 0.05);
     }
 
-    .theme-toggle:hover, .display-theme-toggle:hover, .display-toggle:hover {
+    .theme-toggle:hover, .display-theme-toggle:hover, .display-toggle:hover, .customize-toggle:hover, .clear-all:hover {
       background: var(--header-color);
       color: var(--bg-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
 
     .price-form {
       display: grid;
-      gap: 20px;
+      gap: 10px;
+      grid-template-columns: repeat(2, 1fr);
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
     }
 
     .price-item {
       background: var(--input-bg);
-      padding: 20px;
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      width: 100%;
+      box-sizing: border-box;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      height: 100%;
     }
 
     .price-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 8px;
     }
 
     .product-name {
-      font-size: 20px;
-      color: var(--header-color);
+      font-size: 18px;
+      color: #ffd700;
       font-weight: bold;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
 
     .price-inputs {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 15px;
+      gap: 10px;
     }
 
     .input-group {
@@ -116,20 +174,25 @@
     }
 
     label {
-      margin-bottom: 5px;
+      margin-bottom: 4px;
       color: var(--text-color);
-      font-size: 14px;
+      font-size: 13px;
+      font-weight: 500;
     }
 
     input {
       padding: 10px;
-      border: 1px solid var(--border-color);
-      border-radius: 5px;
-      background: var(--input-bg);
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      border-radius: 8px;
+      background: rgba(25, 25, 25, 0.6);
       color: var(--text-color);
-      font-size: 16px;
+      font-size: 14px;
       outline: none;
-      transition: border-color 0.3s;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      height: 38px;
+      box-sizing: border-box;
+      width: 100%;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
     }
 
     /* Remove increase/decrease buttons from number inputs */
@@ -147,33 +210,50 @@
 
     input:focus {
       border-color: var(--header-color);
+      box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.2);
+    }
+
+    [data-theme="light"] input {
+      background: #fff;
+      color: #333;
+      border-color: #ddd;
     }
 
     button[type="submit"] {
-      background: var(--header-color);
-      color: var(--bg-color);
+      background: #f5d742;
+      color: #222;
       border: none;
-      padding: 15px 30px;
-      border-radius: 8px;
+      padding: 12px 20px;
+      border-radius: 10px;
       font-size: 18px;
       font-weight: bold;
       cursor: pointer;
       transition: transform 0.2s, box-shadow 0.2s;
-      margin-top: 20px;
+      margin-top: 15px;
       width: 100%;
+      height: 52px;
+      box-sizing: border-box;
+      grid-column: 1 / -1;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
     }
 
     button[type="submit"]:hover {
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      background-color: #ffde4c;
     }
 
     .status {
       text-align: center;
-      margin-top: 20px;
-      padding: 10px;
+      margin-top: 12px;
+      padding: 8px;
       border-radius: 5px;
-      font-size: 16px;
+      font-size: 14px;
       opacity: 0;
       transition: opacity 0.3s;
     }
@@ -206,14 +286,14 @@
     }
     
     .customize-modal-content {
-      background-color: var(--bg-color);
+      background-color: #ffffff;
       margin: 10% auto;
       padding: 20px;
-      border: 1px solid var(--border-color);
+      border: 1px solid #ffd700;
       border-radius: 15px;
       width: 80%;
       max-width: 500px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
     }
     
     .customize-header {
@@ -221,18 +301,18 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid #ffd700;
       padding-bottom: 10px;
     }
     
     .customize-header h2 {
       margin: 0;
-      color: var(--header-color);
+      color: #ffd700;
       font-size: 22px;
     }
     
     .customize-close {
-      color: var(--text-color);
+      color: #ffd700;
       font-size: 28px;
       font-weight: bold;
       cursor: pointer;
@@ -244,6 +324,66 @@
       gap: 15px;
     }
     
+    .customize-section {
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ffd700;
+      padding-bottom: 15px;
+    }
+    
+    .customize-section h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+      color: #ffd700;
+    }
+
+    .reset-dark, .reset-light {
+      padding: 8px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      flex: 1;
+      background-color: #ffd700;
+      color: #fff;
+    }
+    
+    .reset-dark:hover, .reset-light:hover {
+      background-color: #ffd700;
+      box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+    }
+
+    .scheme-button {
+      padding: 8px 12px;
+      background: #ffd700;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .scheme-button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+      background-color: #ffd700;
+    }
+    
+    .scheme-delete {
+      background-color: #ffd700;
+    }
+    
+    .scheme-default {
+      background-color: #2ecc71;
+    }
+    
+    .default-scheme-marker {
+      font-size: 12px;
+      color: #2ecc71;
+      margin-left: 5px;
+      font-weight: bold;
+    }
+
     .color-picker-group {
       display: flex;
       justify-content: space-between;
@@ -253,6 +393,7 @@
     .color-picker-group label {
       flex: 1;
       margin-bottom: 0;
+      color: #333333;
     }
     
     input[type="color"] {
@@ -263,7 +404,7 @@
       height: 40px;
       border-radius: 50%;
       cursor: pointer;
-      border: 2px solid var(--border-color);
+      border: 2px solid #ffd700;
     }
     
     input[type="color"]::-webkit-color-swatch-wrapper {
@@ -276,29 +417,10 @@
       border-radius: 50%;
     }
     
-    .apply-colors {
-      background: var(--header-color);
-      color: var(--bg-color);
-      border: none;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      margin-top: 10px;
-      width: 100%;
-    }
-    
-    .apply-colors:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-    
     .customize-toggle {
       background: none;
-      border: 2px solid var(--border-color);
-      color: var(--text-color);
+      border: 2px solid #ffd700;
+      color: #ffd700;
       padding: 8px 16px;
       border-radius: 20px;
       cursor: pointer;
@@ -307,40 +429,8 @@
     }
     
     .customize-toggle:hover {
-      background: var(--header-color);
-      color: var(--bg-color);
-    }
-
-    .toggle-group {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 5px;
-    }
-    
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 60px;
-      height: 34px;
-    }
-    
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    
-    .toggle-slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: .4s;
-      border-radius: 34px;
+      background: #ffd700;
+      color: #ffffff;
     }
     
     .toggle-slider:before {
@@ -355,21 +445,8 @@
       border-radius: 50%;
     }
     
-    input:checked + .toggle-slider {
-      background-color: var(--header-color);
-    }
-    
     input:checked + .toggle-slider:before {
       transform: translateX(26px);
-    }
-
-    /* Make toggle more clickable */
-    .toggle-group {
-      cursor: pointer;
-    }
-    
-    .toggle-group label {
-      cursor: pointer;
     }
 
     /* Reset buttons styling */
@@ -379,38 +456,6 @@
       gap: 10px;
       margin-top: 15px;
       margin-bottom: 20px;
-    }
-    
-    .reset-dark, .reset-light {
-      padding: 8px 12px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      flex: 1;
-    }
-    
-    .reset-dark {
-      background-color: #333;
-      color: #fff;
-      border: 1px solid #555;
-    }
-    
-    .reset-light {
-      background-color: #f5f5f5;
-      color: #333;
-      border: 1px solid #ddd;
-    }
-    
-    .reset-dark:hover {
-      background-color: #444;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
-    
-    .reset-light:hover {
-      background-color: #fff;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
     
     .theme-buttons {
@@ -477,53 +522,222 @@
       align-items: center;
     }
     
+    .customize-toggle {
+      background: none;
+      border: 2px solid var(--border-color);
+      color: var(--text-color);
+      padding: 8px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    
+    .customize-toggle:hover {
+      background: var(--header-color);
+      color: var(--bg-color);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1100px) {
+      .price-form {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 20px;
+      }
+      
+      .theme-toggle, .display-theme-toggle, .display-toggle, .customize-toggle, .clear-all {
+        min-width: 110px;
+        font-size: 13px;
+        padding: 8px 14px;
+      }
+      
+      .product-name {
+        font-size: 16px;
+      }
+      
+      .container {
+        max-height: 100vh;
+        height: auto;
+      }
+      
+      .price-form {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .price-inputs {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+      
+      .price-form {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .price-item {
+        padding: 8px;
+      }
+      
+      h1 {
+        font-size: 18px;
+      }
+      
+      .theme-toggle, .display-theme-toggle, .display-toggle, .customize-toggle, .clear-all {
+        min-width: 100px;
+        font-size: 12px;
+        padding: 6px 12px;
+        margin: 3px;
+      }
+      
+      .header-buttons {
+        gap: 5px;
+      }
+      
+      input {
+        height: 32px;
+        padding: 6px;
+      }
+      
+      .container {
+        padding: 5px;
+        height: auto;
+      }
+    }
+
+    /* Small devices additional adjustments */
+    @media (max-width: 320px) {
+      .price-form {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      h1 {
+        font-size: 16px;
+      }
+      
+      .price-item {
+        padding: 6px;
+      }
+      
+      .theme-toggle, .display-theme-toggle, .display-toggle, .customize-toggle, .clear-all {
+        min-width: 90px;
+        font-size: 11px;
+        padding: 5px 10px;
+      }
+      
+      input {
+        height: 30px;
+        padding: 4px;
+        font-size: 13px;
+      }
+      
+      label {
+        font-size: 12px;
+      }
+      
+      .product-name {
+        font-size: 14px;
+      }
+      
+      button[type="submit"] {
+        height: 40px;
+        font-size: 14px;
+        padding: 8px 16px;
+      }
+    }
+
     .scheme-input, .scheme-dropdown {
       flex: 1;
       padding: 8px;
       border-radius: 4px;
-      border: 1px solid var(--border-color);
-      background: var(--input-bg);
-      color: var(--text-color);
+      border: 1px solid #ffd700;
+      background: #ffffff;
+      color: #333333;
     }
-    
-    .scheme-button {
-      padding: 8px 12px;
-      background: var(--header-color);
-      color: var(--bg-color);
+
+    .apply-colors {
+      background: #ffd700;
+      color: #ffffff;
       border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    
-    .scheme-button:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-    
-    .scheme-delete {
-      background-color: #e74c3c;
-    }
-    
-    .scheme-default {
-      background-color: #2ecc71;
-    }
-    
-    .default-scheme-marker {
-      font-size: 12px;
-      color: #2ecc71;
-      margin-left: 5px;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 16px;
       font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      margin-top: 10px;
+      width: 100%;
+    }
+    
+    .apply-colors:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+      background-color: #ffd700;
+    }
+    
+    .toggle-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 5px;
+    }
+    
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+    
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ddd;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    input:checked + .toggle-slider {
+      background-color: #ffd700;
+    }
+    
+    /* Make toggle more clickable */
+    .toggle-group {
+      cursor: pointer;
+    }
+    
+    .toggle-group label {
+      cursor: pointer;
+      color: #333333;
     }
   </style>
 </head>
-<body>
+<body data-theme="light">
   <div class="container">
     <div class="header-container">
-      <h1>Demir Aslan Kuyumculuk Fiyat Yönetimi</h1>
+      <h1>DEMİRASLAN SARRAFİYE FİYAT KONTROL PANELİ</h1>
+    </div>
+    
+    <div class="button-container">
       <div class="header-buttons">
         <button class="display-toggle" onclick="toggleDisplay()">Ekranı Göster</button>
         <button class="customize-toggle" onclick="toggleCustomizeModal()">Özelleştir</button>
+        <button class="clear-all" onclick="clearAllInputs()">Tümünü Temizle</button>
       </div>
     </div>
     
@@ -763,9 +977,79 @@
   </div>
 
   <script>
+    // Set light mode as default when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set light theme by default
+      document.body.setAttribute('data-theme', 'light');
+      
+      // Initialize other UI elements
+      const displayToggleButton = document.querySelector('.display-toggle');
+      displayToggleButton.textContent = 'Ekranı Göster';
+      
+      const toggleGroup = document.querySelector('.toggle-group');
+      const toggleInput = document.getElementById('titleToggle');
+      
+      toggleGroup.addEventListener('click', function(e) {
+        // Don't toggle if clicking the checkbox directly (it handles itself)
+        if (e.target !== toggleInput) {
+          toggleInput.checked = !toggleInput.checked;
+          console.log('Toggle switched to:', toggleInput.checked);
+        }
+      });
+      
+      // Request default scheme name when app starts
+      window.electron.send('get-default-scheme');
+      
+      // Make sure the form is fully visible
+      adjustFormLayout();
+    });
+    
+    // Adjust layout on resize to ensure everything fits
+    window.addEventListener('resize', adjustFormLayout);
+    
+    function adjustFormLayout() {
+      const container = document.querySelector('.container');
+      const form = document.getElementById('priceForm');
+      const viewportHeight = window.innerHeight;
+      
+      // Reset any previous adjustments
+      container.style.maxHeight = '98vh';
+      container.style.overflowY = 'auto';
+      
+      // Ensure the form is visible without scrolling if possible
+      const containerHeight = container.scrollHeight;
+      if (containerHeight > viewportHeight * 0.98) {
+        // If container is taller than viewport, ensure proper scrolling
+        container.style.maxHeight = '98vh';
+        container.style.overflowY = 'auto';
+      } else {
+        // If container fits, make it take just the space it needs
+        container.style.maxHeight = 'none';
+        container.style.height = 'auto';
+      }
+    }
+    
     // Track current display theme and visibility
-    let currentDisplayTheme = 'dark';
+    let currentDisplayTheme = 'light';
     let isDisplayVisible = false;
+
+    // Clear all input fields
+    function clearAllInputs() {
+      const inputs = document.querySelectorAll('input[type="number"]');
+      inputs.forEach(input => {
+        input.value = '';
+      });
+      
+      // Show success message
+      const status = document.getElementById('status');
+      status.textContent = 'Tüm fiyat alanları temizlendi';
+      status.className = 'status success';
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        status.className = 'status';
+      }, 3000);
+    }
 
     // Theme toggle functionality
     function toggleTheme() {
@@ -802,26 +1086,6 @@
       const displayToggleButton = document.querySelector('.display-toggle');
       displayToggleButton.textContent = isDisplayVisible ? 'Ekranı Gizle' : 'Ekranı Göster';
     }
-
-    // Initialize display buttons text
-    document.addEventListener('DOMContentLoaded', function() {
-      const displayToggleButton = document.querySelector('.display-toggle');
-      displayToggleButton.textContent = 'Ekranı Göster';
-      
-      const toggleGroup = document.querySelector('.toggle-group');
-      const toggleInput = document.getElementById('titleToggle');
-      
-      toggleGroup.addEventListener('click', function(e) {
-        // Don't toggle if clicking the checkbox directly (it handles itself)
-        if (e.target !== toggleInput) {
-          toggleInput.checked = !toggleInput.checked;
-          console.log('Toggle switched to:', toggleInput.checked);
-        }
-      });
-      
-      // Request default scheme name when app starts
-      window.electron.send('get-default-scheme');
-    });
 
     document.getElementById('priceForm').addEventListener('submit', function(e) {
       e.preventDefault();

@@ -69,21 +69,23 @@ if (require('electron-squirrel-startup')) {
 // Keep global references of the window objects to prevent garbage collection
 let mainWindow;
 let displayWindow;
-let currentTheme = 'dark';
+let currentTheme = 'light';
 // Store custom colors for the display
 let displayColors = {
-  bgColor: '#000000',
-  titleColor: '#ffd700',
-  textColor: '#ffffff',
-  shadowColor: '#ffd700',
-  boxColor: '#333333',
+  bgColor: '#ffffff',
+  titleColor: '#b71c1c',
+  textColor: '#000000',
+  shadowColor: '#b71c1c',
+  boxColor: '#f5f5f5',
   showTitle: true
 };
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1000,
+    height: 1200,
+    minWidth: 800,
+    minHeight: 1000,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: true,
