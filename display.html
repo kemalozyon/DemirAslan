@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Demir Aslan - Kuyumcu Fiyat Panosu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg-color: #000000;
@@ -124,12 +127,14 @@
       text-align: center;
       color: var(--header-color);
       margin-bottom: min(1.5vh, 1rem);
-      font-weight: 700;
+      font-weight: 400;
       letter-spacing: 1px;
       position: relative;
       padding-bottom: min(0.8vh, 0.4rem);
       text-transform: uppercase;
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.7);
+      font-family: "Zen Dots", sans-serif;
+      font-style: normal;
     }
 
     .animated-underline {
@@ -459,10 +464,10 @@
     }
 
     /* Clock styling */
-    .clock-container {
+    .clock-container, .date-box {
       position: absolute;
       background: var(--box-color);
-      padding: min(1.5vh, 0.8rem) min(2vw, 1.5rem);
+      padding: min(0.8vh, 0.5rem) min(1vw, 0.8rem);
       border-radius: min(1.5vw, 12px);
       box-shadow: 0 4px 24px var(--shadow-color), 0 0 15px var(--glow-color);
       border: 1px solid var(--border-color);
@@ -474,20 +479,25 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: min(0.5vh, 0.3rem);
+      justify-content: center;
+      gap: min(0.3vh, 0.2rem);
+      width: 25%;
+      max-width: 100%;
+      box-sizing: border-box;
+      top: min(1.5vh, 0.8rem);
     }
 
-    .clock-time {
-      font-size: min(4.5vw, 2.4rem);
+    .clock-time, .date-text {
+      font-size: min(3.2vw, 1.6rem);
+      font-family: "Zen Dots", sans-serif;
+      font-weight: 400;
+      font-style: normal;
+      width: 100%;
+      line-height: 1.2;
+      padding: min(0.5vh, 0.3rem) 0;
     }
 
-    .clock-date {
-      font-size: min(2.5vw, 1.2rem);
-      font-weight: 600;
-      opacity: 0.85;
-    }
-
-    .clock-container:hover {
+    .clock-container:hover, .date-box:hover {
       box-shadow: 0 8px 32px var(--shadow-color), 0 0 25px var(--glow-color);
       border-color: var(--header-color);
       transform: translateY(-2px);
@@ -496,9 +506,14 @@
 
     /* Positioning for when title is visible */
     .clock-with-title {
-      top: min(2vh, 1rem);
-      right: min(16.5vw, 150px);
-      transform: translateX(50%);
+      right: 0;
+      margin-right: 5%;
+    }
+
+    /* Date box on the left side */
+    .date-box {
+      left: 0;
+      margin-left: 5%;
     }
 
     /* Positioning for when title is hidden */
@@ -506,11 +521,12 @@
       bottom: min(2vh, 1rem);
       left: 50%;
       transform: translateX(-50%);
+      top: auto;
     }
 
     /* Adjust hover effect for both positions */
     .clock-with-title:hover {
-      transform: translateX(50%) translateY(-2px);
+      transform: translateY(-2px);
     }
 
     .clock-without-title:hover {
@@ -531,10 +547,14 @@
       <div class="animated-underline"></div>
     </div>
     
+    <!-- Date box on the left side -->
+    <div class="date-box">
+      <div class="date-text">2 NİSAN 2025</div>
+    </div>
+    
     <!-- Clock element -->
     <div id="clock" class="clock-container clock-with-title">
       <div class="clock-time">00:00:00</div>
-      <div class="clock-date">1 OCAK 2023</div>
     </div>
     
     <table class="price-table">
@@ -575,7 +595,7 @@
       const seconds = now.getSeconds().toString().padStart(2, '0');
       document.querySelector('#clock .clock-time').textContent = `${hours}:${minutes}:${seconds}`;
       
-      // Update date - DAY MONTH YEAR with month in text
+      // Update date in the date box
       const day = now.getDate();
       const monthNames = [
         'OCAK', 'ŞUBAT', 'MART', 'NİSAN', 'MAYIS', 'HAZİRAN',
@@ -583,18 +603,38 @@
       ];
       const monthName = monthNames[now.getMonth()];
       const year = now.getFullYear();
-      document.querySelector('#clock .clock-date').textContent = `${day} ${monthName} ${year}`;
+      document.querySelector('.date-text').textContent = `${day} ${monthName} ${year}`;
     }
     
     // Update clock position based on title visibility
     function updateClockPosition(showTitle) {
       const clock = document.getElementById('clock');
+      const dateBox = document.querySelector('.date-box');
+      
       if (showTitle) {
+        // When title is shown, position boxes at top left/right
         clock.classList.remove('clock-without-title');
         clock.classList.add('clock-with-title');
+        
+        // Reset any inline styles that might have been applied
+        clock.style.top = '';
+        clock.style.right = '';
+        clock.style.bottom = '';
+        clock.style.left = '';
+        clock.style.transform = '';
+        
+        // Show and position date box at the top left
+        dateBox.style.display = 'flex';
+        dateBox.style.top = '';
+        dateBox.style.left = '';
+        dateBox.style.transform = '';
       } else {
+        // When title is hidden, center the clock at bottom
         clock.classList.remove('clock-with-title');
         clock.classList.add('clock-without-title');
+        
+        // Hide date box when title is hidden
+        dateBox.style.display = 'none';
       }
     }
     
@@ -637,8 +677,9 @@
           element.style.color = colors.textColor;
         });
         
-        // Apply text color to the clock
+        // Apply text color to the clock and date box
         document.getElementById('clock').style.color = colors.textColor;
+        document.querySelector('.date-box').style.color = colors.textColor;
       }
       
       if (colors.boxColor) {
@@ -661,13 +702,17 @@
       // Apply title visibility setting
       if (colors.hasOwnProperty('showTitle')) {
         const titleContainer = document.querySelector('.title-container');
+        const dateBox = document.querySelector('.date-box');
+        
         if (!colors.showTitle) {
           titleContainer.classList.add('hidden');
           document.body.classList.add('header-hidden');
+          dateBox.style.display = 'none';
           updateClockPosition(false);
         } else {
           titleContainer.classList.remove('hidden');
           document.body.classList.remove('header-hidden');
+          dateBox.style.display = 'flex';
           updateClockPosition(true);
         }
       }
@@ -770,8 +815,9 @@
           element.style.color = colors.textColor;
         });
         
-        // Apply text color to the clock
+        // Apply text color to the clock and date box
         document.getElementById('clock').style.color = colors.textColor;
+        document.querySelector('.date-box').style.color = colors.textColor;
       }
       
       if (colors.boxColor) {
@@ -796,13 +842,17 @@
       const titleContainer = document.querySelector('.title-container');
       
       if (colors.hasOwnProperty('showTitle')) {
+        const dateBox = document.querySelector('.date-box');
+        
         if (colors.showTitle) {
           titleContainer.classList.remove('hidden');
           document.body.classList.remove('header-hidden');
+          dateBox.style.display = 'flex';
           updateClockPosition(true);
         } else {
           titleContainer.classList.add('hidden');
           document.body.classList.add('header-hidden');
+          dateBox.style.display = 'none';
           updateClockPosition(false);
         }
       }
