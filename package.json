@@ -29,6 +29,15 @@
     "directories": {
       "output": "dist"
     },
+    "icon": "assets/diamond.png",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": ["dmg", "zip"],
+      "hardenedRuntime": true,
+      "gatekeeperAssess": false,
+      "entitlements": "build/entitlements.mac.plist",
+      "entitlementsInherit": "build/entitlements.mac.plist"
+    },
     "win": {
       "target": [
         {
