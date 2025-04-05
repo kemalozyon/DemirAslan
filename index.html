@@ -1027,17 +1027,32 @@
         calculateRelatedPrices('sell');
       });
       
+      // Add event listeners for Eski Kremsiye fields to trigger calculations
+      document.getElementById('eskiKremsiyeAlis').addEventListener('input', function() {
+        calculateRelatedEskiPrices('buy');
+      });
+      
+      document.getElementById('eskiKremsiyeSatis').addEventListener('input', function() {
+        calculateRelatedEskiPrices('sell');
+      });
+      
       // Add event listeners to track when user manually edits a field
       const calculatedBuyFields = [
         document.getElementById('ceyrekAlis'),
         document.getElementById('yarimAlis'),
-        document.getElementById('24ayarAlis')
+        document.getElementById('24ayarAlis'),
+        document.getElementById('bceyrekAlis'),
+        document.getElementById('tamAlis'),
+        document.getElementById('eskiTekAtaAlis')
       ];
       
       const calculatedSellFields = [
         document.getElementById('ceyrekSatis'),
         document.getElementById('yarimSatis'),
-        document.getElementById('24ayarSatis')
+        document.getElementById('24ayarSatis'),
+        document.getElementById('bceyrekSatis'),
+        document.getElementById('tamSatis'),
+        document.getElementById('eskiTekAtaSatis')
       ];
       
       // Add a class to style calculated fields
@@ -1145,10 +1160,73 @@
       }
     }
     
+    // Function to calculate related Eski prices based on Eski Kremsiye price
+    function calculateRelatedEskiPrices(type) {
+      if (type === 'buy') {
+        // Calculate buy prices
+        const eskiKremsiyeAlis = document.getElementById('eskiKremsiyeAlis');
+        const bceyrekAlis = document.getElementById('bceyrekAlis');
+        const tamAlis = document.getElementById('tamAlis');
+        const eskiTekAtaAlis = document.getElementById('eskiTekAtaAlis');
+        
+        // Only calculate if Eski Kremsiye value exists and is valid
+        if (eskiKremsiyeAlis.value && !isNaN(parseFloat(eskiKremsiyeAlis.value))) {
+          const kremsiyeValue = parseFloat(eskiKremsiyeAlis.value);
+          
+          // Eski Çeyrek = Eski Kremsiye ÷ 10
+          if (!bceyrekAlis.hasAttribute('data-user-edited')) {
+            bceyrekAlis.value = (kremsiyeValue / 10).toFixed(2);
+          }
+          
+          // Eski Yarım = Eski Çeyrek × 2
+          const ceyrekValue = parseFloat(bceyrekAlis.value);
+          if (!tamAlis.hasAttribute('data-user-edited') && !isNaN(ceyrekValue)) {
+            tamAlis.value = (ceyrekValue * 2).toFixed(2);
+          }
+          
+          // Eski Tek Ata = Eski Yarım × 2
+          const yarimValue = parseFloat(tamAlis.value);
+          if (!eskiTekAtaAlis.hasAttribute('data-user-edited') && !isNaN(yarimValue)) {
+            eskiTekAtaAlis.value = (yarimValue * 2).toFixed(2);
+          }
+        }
+      } else if (type === 'sell') {
+        // Calculate sell prices
+        const eskiKremsiyeSatis = document.getElementById('eskiKremsiyeSatis');
+        const bceyrekSatis = document.getElementById('bceyrekSatis');
+        const tamSatis = document.getElementById('tamSatis');
+        const eskiTekAtaSatis = document.getElementById('eskiTekAtaSatis');
+        
+        // Only calculate if Eski Kremsiye value exists and is valid
+        if (eskiKremsiyeSatis.value && !isNaN(parseFloat(eskiKremsiyeSatis.value))) {
+          const kremsiyeValue = parseFloat(eskiKremsiyeSatis.value);
+          
+          // Eski Çeyrek = Eski Kremsiye ÷ 10
+          if (!bceyrekSatis.hasAttribute('data-user-edited')) {
+            bceyrekSatis.value = (kremsiyeValue / 10).toFixed(2);
+          }
+          
+          // Eski Yarım = Eski Çeyrek × 2
+          const ceyrekValue = parseFloat(bceyrekSatis.value);
+          if (!tamSatis.hasAttribute('data-user-edited') && !isNaN(ceyrekValue)) {
+            tamSatis.value = (ceyrekValue * 2).toFixed(2);
+          }
+          
+          // Eski Tek Ata = Eski Yarım × 2
+          const yarimValue = parseFloat(tamSatis.value);
+          if (!eskiTekAtaSatis.hasAttribute('data-user-edited') && !isNaN(yarimValue)) {
+            eskiTekAtaSatis.value = (yarimValue * 2).toFixed(2);
+          }
+        }
+      }
+    }
+    
     // Check for any initial values and calculate on page load
     document.addEventListener('DOMContentLoaded', function() {
       calculateRelatedPrices('buy');
       calculateRelatedPrices('sell');
+      calculateRelatedEskiPrices('buy');
+      calculateRelatedEskiPrices('sell');
     });
 
     // Clear all input fields
@@ -1226,6 +1304,8 @@
       // Ensure all calculated fields are properly updated before submitting
       calculateRelatedPrices('buy');
       calculateRelatedPrices('sell');
+      calculateRelatedEskiPrices('buy');
+      calculateRelatedEskiPrices('sell');
       
       const prices = [
         {
