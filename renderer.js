@@ -96,8 +96,8 @@ function updatePriceList() {
       <button class="delete-btn" data-index="${index}">×</button>
       <div class="product-name">${item.name}</div>
       <div class="price-row">
-        <div class="buy-price">Alış: ${item.buyPrice.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₺</div>
-        <div class="sell-price">Satış: ${item.sellPrice.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ₺</div>
+        <div class="buy-price">Alış: ${Math.floor(item.buyPrice).toLocaleString('tr-TR')} ₺</div>
+        <div class="sell-price">Satış: ${Math.floor(item.sellPrice).toLocaleString('tr-TR')} ₺</div>
       </div>
     `;
 

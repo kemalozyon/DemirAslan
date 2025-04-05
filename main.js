@@ -116,6 +116,10 @@ function createMainWindow() {
   
   // Emitted when the window is closed
   mainWindow.on('closed', () => {
+    // Close the display window when the main window (control panel) is closed
+    if (displayWindow && !displayWindow.isDestroyed()) {
+      displayWindow.close();
+    }
     mainWindow = null;
   });
 }

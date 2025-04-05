@@ -1114,19 +1114,19 @@
           
           // Yeni Çeyrek = Yeni Kremsiye ÷ 10
           if (!ceyrekAlis.hasAttribute('data-user-edited')) {
-            ceyrekAlis.value = (kremsiyeValue / 10).toFixed(2);
+            ceyrekAlis.value = Math.floor(kremsiyeValue / 10);
           }
           
           // Yeni Yarım = Yeni Çeyrek × 2
           const ceyrekValue = parseFloat(ceyrekAlis.value);
           if (!yarimAlis.hasAttribute('data-user-edited') && !isNaN(ceyrekValue)) {
-            yarimAlis.value = (ceyrekValue * 2).toFixed(2);
+            yarimAlis.value = Math.floor(ceyrekValue * 2);
           }
           
           // Yeni Tek Ata = Yeni Yarım × 2
           const yarimValue = parseFloat(yarimAlis.value);
           if (!ataAlis.hasAttribute('data-user-edited') && !isNaN(yarimValue)) {
-            ataAlis.value = (yarimValue * 2).toFixed(2);
+            ataAlis.value = Math.floor(yarimValue * 2);
           }
         }
       } else if (type === 'sell') {
@@ -1142,19 +1142,19 @@
           
           // Yeni Çeyrek = Yeni Kremsiye ÷ 10
           if (!ceyrekSatis.hasAttribute('data-user-edited')) {
-            ceyrekSatis.value = (kremsiyeValue / 10).toFixed(2);
+            ceyrekSatis.value = Math.floor(kremsiyeValue / 10);
           }
           
           // Yeni Yarım = Yeni Çeyrek × 2
           const ceyrekValue = parseFloat(ceyrekSatis.value);
           if (!yarimSatis.hasAttribute('data-user-edited') && !isNaN(ceyrekValue)) {
-            yarimSatis.value = (ceyrekValue * 2).toFixed(2);
+            yarimSatis.value = Math.floor(ceyrekValue * 2);
           }
           
           // Yeni Tek Ata = Yeni Yarım × 2
           const yarimValue = parseFloat(yarimSatis.value);
           if (!ataSatis.hasAttribute('data-user-edited') && !isNaN(yarimValue)) {
-            ataSatis.value = (yarimValue * 2).toFixed(2);
+            ataSatis.value = Math.floor(yarimValue * 2);
           }
         }
       }
@@ -1175,19 +1175,19 @@
           
           // Eski Çeyrek = Eski Kremsiye ÷ 10
           if (!bceyrekAlis.hasAttribute('data-user-edited')) {
-            bceyrekAlis.value = (kremsiyeValue / 10).toFixed(2);
+            bceyrekAlis.value = Math.floor(kremsiyeValue / 10);
           }
           
           // Eski Yarım = Eski Çeyrek × 2
           const ceyrekValue = parseFloat(bceyrekAlis.value);
           if (!tamAlis.hasAttribute('data-user-edited') && !isNaN(ceyrekValue)) {
-            tamAlis.value = (ceyrekValue * 2).toFixed(2);
+            tamAlis.value = Math.floor(ceyrekValue * 2);
           }
           
           // Eski Tek Ata = Eski Yarım × 2
           const yarimValue = parseFloat(tamAlis.value);
           if (!eskiTekAtaAlis.hasAttribute('data-user-edited') && !isNaN(yarimValue)) {
-            eskiTekAtaAlis.value = (yarimValue * 2).toFixed(2);
+            eskiTekAtaAlis.value = Math.floor(yarimValue * 2);
           }
         }
       } else if (type === 'sell') {
@@ -1203,19 +1203,19 @@
           
           // Eski Çeyrek = Eski Kremsiye ÷ 10
           if (!bceyrekSatis.hasAttribute('data-user-edited')) {
-            bceyrekSatis.value = (kremsiyeValue / 10).toFixed(2);
+            bceyrekSatis.value = Math.floor(kremsiyeValue / 10);
           }
           
           // Eski Yarım = Eski Çeyrek × 2
           const ceyrekValue = parseFloat(bceyrekSatis.value);
           if (!tamSatis.hasAttribute('data-user-edited') && !isNaN(ceyrekValue)) {
-            tamSatis.value = (ceyrekValue * 2).toFixed(2);
+            tamSatis.value = Math.floor(ceyrekValue * 2);
           }
           
           // Eski Tek Ata = Eski Yarım × 2
           const yarimValue = parseFloat(tamSatis.value);
           if (!eskiTekAtaSatis.hasAttribute('data-user-edited') && !isNaN(yarimValue)) {
-            eskiTekAtaSatis.value = (yarimValue * 2).toFixed(2);
+            eskiTekAtaSatis.value = Math.floor(yarimValue * 2);
           }
         }
       }
