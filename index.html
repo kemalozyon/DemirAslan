@@ -1013,6 +1013,46 @@
       
       // Make sure the form is fully visible
       adjustFormLayout();
+      
+      // Check for any initial values and calculate on page load
+      calculateRelatedPrices('buy');
+      calculateRelatedPrices('sell');
+      
+      // Add event listeners for Yeni Kremsiye fields to trigger calculations
+      document.getElementById('yeniKremsiyeAlis').addEventListener('input', function() {
+        calculateRelatedPrices('buy');
+      });
+      
+      document.getElementById('yeniKremsiyeSatis').addEventListener('input', function() {
+        calculateRelatedPrices('sell');
+      });
+      
+      // Add event listeners to track when user manually edits a field
+      const calculatedBuyFields = [
+        document.getElementById('ceyrekAlis'),
+        document.getElementById('yarimAlis'),
+        document.getElementById('24ayarAlis')
+      ];
+      
+      const calculatedSellFields = [
+        document.getElementById('ceyrekSatis'),
+        document.getElementById('yarimSatis'),
+        document.getElementById('24ayarSatis')
+      ];
+      
+      // Add a class to style calculated fields
+      [...calculatedBuyFields, ...calculatedSellFields].forEach(field => {
+        field.classList.add('calculated-price');
+      });
+      
+      // Track when a user edits a calculated field
+      [...calculatedBuyFields, ...calculatedSellFields].forEach(field => {
+        field.addEventListener('input', function() {
+          this.setAttribute('data-user-edited', 'true');
+          // Remove calculated styling when user edits
+          this.classList.remove('calculated-price');
+        });
+      });
     });
     
     // Adjust layout on resize to ensure everything fits
@@ -1044,10 +1084,65 @@
     let currentDisplayTheme = 'light';
     let isDisplayVisible = false;
 
-    // Function to calculate related prices based on New Quarter price
+    // Function to calculate related prices based on Yeni Kremsiye price
     function calculateRelatedPrices(type) {
-      // This function is now disabled to allow independent price entry
-      return;
+      if (type === 'buy') {
+        // Calculate buy prices
+        const kremsiyeAlis = document.getElementById('yeniKremsiyeAlis');
+        const ceyrekAlis = document.getElementById('ceyrekAlis');
+        const yarimAlis = document.getElementById('yarimAlis');
+        const ataAlis = document.getElementById('24ayarAlis');
+        
+        // Only calculate if Yeni Kremsiye value exists and is valid
+        if (kremsiyeAlis.value && !isNaN(parseFloat(kremsiyeAlis.value))) {
+          const kremsiyeValue = parseFloat(kremsiyeAlis.value);
+          
+          // Yeni Çeyrek = Yeni Kremsiye ÷ 10
+          if (!ceyrekAlis.hasAttribute('data-user-edited')) {
+            ceyrekAlis.value = (kremsiyeValue / 10).toFixed(2);
+          }
+          
+          // Yeni Yarım = Yeni Çeyrek × 2
+          const ceyrekValue = parseFloat(ceyrekAlis.value);
+          if (!yarimAlis.hasAttribute('data-user-edited') && !isNaN(ceyrekValue)) {
+            yarimAlis.value = (ceyrekValue * 2).toFixed(2);
+          }
+          
+          // Yeni Tek Ata = Yeni Yarım × 2
+          const yarimValue = parseFloat(yarimAlis.value);
+          if (!ataAlis.hasAttribute('data-user-edited') && !isNaN(yarimValue)) {
+            ataAlis.value = (yarimValue * 2).toFixed(2);
+          }
+        }
+      } else if (type === 'sell') {
+        // Calculate sell prices
+        const kremsiyeSatis = document.getElementById('yeniKremsiyeSatis');
+        const ceyrekSatis = document.getElementById('ceyrekSatis');
+        const yarimSatis = document.getElementById('yarimSatis');
+        const ataSatis = document.getElementById('24ayarSatis');
+        
+        // Only calculate if Yeni Kremsiye value exists and is valid
+        if (kremsiyeSatis.value && !isNaN(parseFloat(kremsiyeSatis.value))) {
+          const kremsiyeValue = parseFloat(kremsiyeSatis.value);
+          
+          // Yeni Çeyrek = Yeni Kremsiye ÷ 10
+          if (!ceyrekSatis.hasAttribute('data-user-edited')) {
+            ceyrekSatis.value = (kremsiyeValue / 10).toFixed(2);
+          }
+          
+          // Yeni Yarım = Yeni Çeyrek × 2
+          const ceyrekValue = parseFloat(ceyrekSatis.value);
+          if (!yarimSatis.hasAttribute('data-user-edited') && !isNaN(ceyrekValue)) {
+            yarimSatis.value = (ceyrekValue * 2).toFixed(2);
+          }
+          
+          // Yeni Tek Ata = Yeni Yarım × 2
+          const yarimValue = parseFloat(yarimSatis.value);
+          if (!ataSatis.hasAttribute('data-user-edited') && !isNaN(yarimValue)) {
+            ataSatis.value = (yarimValue * 2).toFixed(2);
+          }
+        }
+      }
     }
     
     // Check for any initial values and calculate on page load
@@ -1061,6 +1156,21 @@
       const inputs = document.querySelectorAll('input[type="number"]');
       inputs.forEach(input => {
         input.value = '';
+        // Remove user edit flags
+        input.removeAttribute('data-user-edited');
+      });
+      
+      // Restore calculated-price class to the calculated fields
+      const calculatedFields = [
+        'ceyrekAlis', 'yarimAlis', '24ayarAlis',
+        'ceyrekSatis', 'yarimSatis', '24ayarSatis'
+      ];
+      
+      calculatedFields.forEach(id => {
+        const field = document.getElementById(id);
+        if (field) {
+          field.classList.add('calculated-price');
+        }
       });
       
       // Show success message
