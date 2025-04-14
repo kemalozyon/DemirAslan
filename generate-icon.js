@@ -3,43 +3,36 @@ const toIco = require('to-ico');
 const fs = require('fs');
 const path = require('path');
 
-// Function to create a simple icon
-async function generateIcon() {
+// Function to convert existing PNG icon to ICO
+async function convertExistingIconToIco() {
   try {
-    // Create a new image with blue background
-    const image = await jimp.create(256, 256, 0x3498dbff);
+    const assetsDir = path.join(__dirname, 'assets');
+    const pngPath = path.join(assetsDir, 'diamond.png');
+    const icoPath = path.join(assetsDir, 'diamond.ico');
     
-    // Add text "DA" to the image
-    const font = await jimp.loadFont(jimp.FONT_SANS_64_WHITE);
-    image.print(
-      font,
-      0,
-      0,
-      {
-        text: 'DA',
-        alignmentX: jimp.HORIZONTAL_ALIGN_CENTER,
-        alignmentY: jimp.VERTICAL_ALIGN_MIDDLE
-      },
-      256,
-      256
-    );
+    console.log('Reading existing PNG icon from:', pngPath);
     
-    // Save as PNG first
-    const pngPath = path.join(__dirname, 'build', 'icon.png');
-    await image.writeAsync(pngPath);
-    console.log('PNG icon created successfully!');
+    // Check if the PNG exists
+    if (!fs.existsSync(pngPath)) {
+      throw new Error('diamond.png not found in assets directory');
+    }
     
-    // Convert PNG to ICO
+    // Read the PNG file
     const pngBuffer = fs.readFileSync(pngPath);
-    const icoBuffer = await toIco(pngBuffer);
+    
+    // Convert PNG to ICO with multiple sizes
+    const icoBuffer = await toIco(pngBuffer, {
+      sizes: [16, 24, 32, 48, 64, 128, 256],
+      resize: true
+    });
     
     // Save ICO file
-    fs.writeFileSync(path.join(__dirname, 'build', 'icon.ico'), icoBuffer);
-    console.log('ICO icon created successfully!');
+    fs.writeFileSync(icoPath, icoBuffer);
+    console.log('ICO icon created successfully at:', icoPath);
   } catch (err) {
-    console.error('Error generating icon:', err);
+    console.error('Error converting icon:', err);
   }
 }
 
-// Run the function
-generateIcon(); 
+// Run the function to convert the icon
+convertExistingIconToIco(); 

@@ -1017,6 +1017,8 @@
       // Check for any initial values and calculate on page load
       calculateRelatedPrices('buy');
       calculateRelatedPrices('sell');
+      calculateRelatedEskiPrices('buy');
+      calculateRelatedEskiPrices('sell');
       
       // Add event listeners for Yeni Kremsiye fields to trigger calculations
       document.getElementById('yeniKremsiyeAlis').addEventListener('input', function() {
@@ -1066,6 +1068,18 @@
           this.setAttribute('data-user-edited', 'true');
           // Remove calculated styling when user edits
           this.classList.remove('calculated-price');
+        });
+      });
+      
+      // Add event listeners to all input fields to position cursor at the end
+      const allInputs = document.querySelectorAll('input[type="number"], input[type="text"]');
+      allInputs.forEach(input => {
+        input.addEventListener('focus', function() {
+          // Move cursor to the end of input
+          const len = this.value.length;
+          setTimeout(() => {
+            this.setSelectionRange(len, len);
+          }, 0);
         });
       });
     });

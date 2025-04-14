@@ -13,6 +13,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const clearAllButton = document.getElementById('clear-all');
   const lastUpdateTime = document.getElementById('last-update-time');
 
+  // Position cursor at end of text when input fields receive focus
+  const positionCursorAtEnd = (input) => {
+    input.addEventListener('focus', function() {
+      const len = this.value.length;
+      setTimeout(() => {
+        this.setSelectionRange(len, len);
+      }, 0);
+    });
+  };
+
+  // Apply cursor positioning to all input fields
+  [productNameInput, buyPriceInput, sellPriceInput].forEach(positionCursorAtEnd);
+
   // Load saved prices from localStorage
   const savedPrices = localStorage.getItem('prices');
   if (savedPrices) {

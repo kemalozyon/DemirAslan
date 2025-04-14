@@ -9,8 +9,11 @@
     "build": "electron-builder build --win --publish never",
     "build:portable": "electron-builder build --win portable --publish never",
     "build:mac": "electron-builder build --mac --publish never",
+    "build:mac-arm64": "electron-builder build --mac --arm64 --publish never",
     "build:all": "electron-builder build -mw --publish never",
-    "pack-win": "electron-builder --win --dir"
+    "pack-win": "electron-builder --win --dir",
+    "package-windows": "node generate-icon.js && electron-builder build --win --x64 --publish never",
+    "generate-mac-icon": "node generate-mac-icon.js"
   },
   "keywords": [],
   "author": "",
@@ -30,13 +33,29 @@
       "output": "dist"
     },
     "icon": "assets/diamond.png",
+    "files": [
+      "**/*",
+      "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+      "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+      "!**/node_modules/*.d.ts",
+      "!**/node_modules/.bin",
+      "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+      "!.editorconfig",
+      "!**/._*",
+      "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+      "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+      "!**/{appveyor.yml,.travis.yml,circle.yml}",
+      "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}"
+    ],
     "mac": {
       "category": "public.app-category.utilities",
       "target": ["dmg", "zip"],
       "hardenedRuntime": true,
       "gatekeeperAssess": false,
       "entitlements": "build/entitlements.mac.plist",
-      "entitlementsInherit": "build/entitlements.mac.plist"
+      "entitlementsInherit": "build/entitlements.mac.plist",
+      "darkModeSupport": true,
+      "icon": "assets/diamond.icns"
     },
     "win": {
       "target": [
@@ -59,7 +78,11 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "runAfterFinish": true
+      "runAfterFinish": true,
+      "perMachine": false,
+      "installerIcon": "assets/diamond.ico",
+      "uninstallerIcon": "assets/diamond.ico",
+      "installerHeaderIcon": "assets/diamond.ico"
     },
     "portable": {
       "artifactName": "${productName}-Portable-${version}.${ext}"
